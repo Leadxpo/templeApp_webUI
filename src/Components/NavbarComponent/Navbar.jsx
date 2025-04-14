@@ -1,33 +1,30 @@
-// Navbar.jsx
-import { useNavigate, useLocation, Outlet } from "react-router-dom";
-import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
-  Typography,
   Box,
+  Typography,
+  Button,
   Avatar,
   Chip,
 } from "@mui/material";
-
-
-import Logo from "../../Images/Kotilinga Temple Logo 1.png";
+import { useEffect, useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import Logo from "../../Images/Kotilinga Temple Logo 1.png"; // update the path if needed
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [userData, setUserData] = useState(localStorage.getItem("userData"));
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const storedUserData = localStorage.getItem("userData");
+    const storedUserData = JSON.parse(localStorage.getItem("userData"));
     setUserData(storedUserData);
   }, []);
-
-console.log("++++++++++++++++>",userData)
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("userData");
     setUserData(null);
     navigate("/home");
   };
@@ -45,40 +42,40 @@ console.log("++++++++++++++++>",userData)
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
     { label: "Register", path: "/register" },
-    { label: "Login", path: "/login" },
-    { label: "Donate", path: "/donete" },
+    { label: "Log In", path: "/login" },
   ];
 
   return (
     <>
       <AppBar
-        position="fixed"
-        sx={{
-          backgroundColor: "#000",
-          color: "#fff",
-          height: 120,
-          boxShadow: "none",
-          zIndex: 1000,
-          transition: "width 0.3s",
-          display: "flex",
-          justifyContent: "center",
-        }}
+       position="absolute"
+       sx={{
+         backgroundColor: "rgba(0, 0, 0, 0.4)", // translucent black
+         color: "#fff",
+         height: 100,
+         boxShadow: "none",
+         zIndex: 1300,
+         backdropFilter: "blur(5px)", // optional: adds glassmorphism
+         justifyContent: "center",
+       }}
       >
-        <Toolbar
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            height: "100%",
-          }}
-        >
-          {/* Logo + Title */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 5 }}>
+        <Toolbar sx={{ justifyContent: "space-between", height: "100%" }}>
+          {/* Left: Logo and Title */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <img src={Logo} alt="Logo" style={{ height: "70px" }} />
-            <p style={{ fontSize: "20px" }}>శ్రీ శక్తిపీఠ కోటి లింగ క్షేత్రం</p>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                fontSize: "1.5rem",
+                fontFamily: "inherit",
+              }}
+            >
+              శ్రీ శక్తిపీఠ కోటి లింగ క్షేత్రం
+            </Typography>
           </Box>
 
-          {/* Navigation + Avatar/Chip */}
+          {/* Middle: Nav Links */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
             {navLinks.map((item) => (
               <Typography
@@ -86,27 +83,44 @@ console.log("++++++++++++++++>",userData)
                 onClick={() => handleNavigation(item.path)}
                 sx={{
                   cursor: "pointer",
-                  color: location.pathname === item.path ? "#FFD700" : "#fff",
-                  fontSize: "1.2rem",
-                  transition: "color 0.3s ease",
+                  color: location.pathname === item.path ? "#FF9900" : "#333",
+                  fontSize: "1.1rem",
+                  fontWeight: 500,
                   "&:hover": {
-                    color: "#FFD700",
+                    color: "#FF9900",
                   },
-                
                 }}
               >
                 {item.label}
               </Typography>
             ))}
+          </Box>
 
-            {/* Profile Chip or Avatar */}
+          {/* Right: Donate + Profile */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#ff9900",
+                color: "#fff",
+                fontWeight: "bold",
+                px: 3,
+                "&:hover": {
+                  backgroundColor: "#e38800",
+                },
+              }}
+              onClick={() => handleNavigation("/donate")}
+            >
+              Donate
+            </Button>
+
             {userData ? (
               <Chip
                 label={userData?.userName || "Profile"}
                 avatar={
                   <Avatar
                     src={
-                      userData?.image
+                      userData?.profilePic
                         ? `http://localhost:3001/storage/userdp/${userData.profilePic}`
                         : ""
                     }
@@ -116,7 +130,7 @@ console.log("++++++++++++++++>",userData)
                 }
                 onClick={handleProfileNavigate}
                 variant="outlined"
-                sx={{ cursor: "pointer", backgroundColor: "white" }}
+                sx={{ cursor: "pointer", backgroundColor: "#f5f5f5" }}
               />
             ) : (
               <Avatar sx={{ bgcolor: "gray" }} />
@@ -125,8 +139,8 @@ console.log("++++++++++++++++>",userData)
         </Toolbar>
       </AppBar>
 
-      {/* Content space */}
-      <Box sx={{ pt: "130px", backgroundColor: "#000", color: "#fff", minHeight: "100vh" }}>
+      {/* Page Content */}
+      <Box >
         <Outlet />
       </Box>
     </>
