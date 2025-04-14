@@ -121,7 +121,7 @@ const Navbar = () => {
                   <Avatar
                     src={
                       userData?.profilePic
-                        ? `http://localhost:3001/storage/userdp/${userData.profilePic}`
+                        ? `https://temple.signaturecutz.in/api/storage/userdp/${userData.profilePic}`
                         : ""
                     }
                     alt="Profile"

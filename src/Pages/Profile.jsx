@@ -53,7 +53,7 @@ const Profile = () => {
             <Avatar
               src={
                 user.profilePic
-                  ? `http://localhost:3001/storage/userdp/${user.profilePic}`
+                  ? `https://temple.signaturecutz.in/api/storage/userdp/${user.profilePic}`
                   : ""
               }
               alt={user.userName}
