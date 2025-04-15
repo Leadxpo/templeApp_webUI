@@ -42,8 +42,8 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // const response = await axios.post('http://localhost:3001/user/register', formData);
-      const response = await axios.post('https://temple.signaturecutz.in/user/register', formData);
+      const response = await axios.post('https://temple.signaturecutz.in/api/user/register', formData);
+      // const response = await axios.post('https://temple.signaturecutz.in/user/register', formData);
 
       console.log('Registration successful:', response.data);
       alert('User registered successfully!');

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import MainVideo from "../../Images/Kotilinga Temple Renders.mp4";
+import MainVideo from "../../Images/KotilingaTempleRenders.mp4";
 import { BsFire } from "react-icons/bs";
 import { HiMoon } from "react-icons/hi";
 import { FaFire } from "react-icons/fa";
@@ -11,10 +11,10 @@ import "slick-carousel/slick/slick-theme.css";
 import Shiva from "../../Images/lord-shiva.jpg";
 import ShivaLinga from "../../Images/shiva-linga.jpg";
 import TempleSignificance from "../../Images/freepik__dolly-zoom-a-beautifully-adorned-shiva-lingam-sits__93543.mp4";
-import Image1 from "../../Images/Kotilinga Temple Renders-6.jpg";
-import Image2 from "../../Images/Kotilinga Temple Renders-31.jpg";
-import Image3 from "../../Images/Kotilinga Temple Renders-34.jpg";
-import donationImg from "../../Images/Kotilinga Temple Renders-2.jpg"; // Replace with your image path
+import Image1 from "../../Images/KotilingaTempleRenders-6.jpg";
+import Image2 from "../../Images/KotilingaTempleRenders-31.jpg";
+import Image3 from "../../Images/KotilingaTempleRenders-34.jpg";
+import donationImg from "../../Images/KotilingaTempleRenders-2.jpg"; // Replace with your image path
 import Footer from '../../Components/Footer/Footer'; 
 
 // import Image4 from "../../Images/Kotilinga Temple Renders-34.jpg"
@@ -49,16 +49,16 @@ function HomepageComponent() {
         <div className="video-overlay"></div>
 
         <div className="video-content">
-          <h1 className="video-heading">Welcome To</h1>
+          <h1 className="video-heading" style={{marginLeft:100}}>Welcome To</h1>
 
-          <h1 className="video-title">
+          <h1 className="video-title" style={{marginLeft:100}}>
             Sri Shaktipeetha Koti Linga <br className="break" /> Kshethram
           </h1>
 
-          <p className="video-subtitle">
+          <p className="video-subtitle" style={{marginLeft:100}}>
             A Divine Abode of Lord Shiva – Experience the Eternal Blessings
           </p>
-          <button className="donate-button">Donate Now</button>
+          <button className="donate-button" style={{marginLeft:100}}>Donate Now</button>
         </div>
       </div>
 

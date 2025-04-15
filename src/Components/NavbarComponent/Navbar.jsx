@@ -10,7 +10,7 @@ import {
   Chip,
 } from "@mui/material";
 
-import Logo from "../../Images/Kotilinga Temple Logo 1.png";
+import Logo from "../../Images/KotilingaTempleLogo1.png";
 
 const Navbar = ({ isHomePage }) => {
   const navigate = useNavigate();
@@ -99,7 +99,7 @@ const Navbar = ({ isHomePage }) => {
                   <Avatar
                     src={
                       user?.image
-                        ? `http://localhost:3001/storage/userdp/${user.profilePic}`
+                        ? `https://temple.signaturecutz.in/api//storage/userdp/${user.profilePic}`
                         : ""
                     }
                     alt="Profile"

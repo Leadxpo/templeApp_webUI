@@ -12,7 +12,7 @@ import {
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
-import LogoImage from '../../Images/Kotilinga Temple Logo 1.png';
+import LogoImage from '../../Images/KotilingaTempleLogo1.png';
 
 // import Footer from "../Footer/Footer";
 
