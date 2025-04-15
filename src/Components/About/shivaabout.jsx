@@ -1,34 +1,54 @@
 import React from 'react';
-import { Box, Grid, Typography, Card, CardMedia, CardContent } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  keyframes,
+} from '@mui/material';
 import SivaImage from '../../Images/lord-shiva.jpg';
 
+// Define the animation
+const moveLeftToRight = keyframes`
+  0% {
+    transform: translateX(-80px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
 
 const HistorySection = () => {
   return (
-    <Box sx={{ backgroundColor: '#0a0f0f', color: 'white', py: 8, px: { xs: 2, md: 10 } }}>
-      <Grid container spacing={4} alignItems="center" justifyContent="center">
+    <Box sx={{ backgroundColor: '#0a0f0f', color: 'white', py: 6, px: { xs: 2, md: 10 } }}>
+      <Grid container spacing={6} alignItems="center" justifyContent="center">
         {/* Left Side Image */}
         <Grid item xs={12} md={6}>
           <Card
             sx={{
-              borderRadius: 4,
+              borderRadius: 2,
               overflow: 'hidden',
               boxShadow: 5,
               bgcolor: '#121212',
+              animation: `${moveLeftToRight} 1.5s ease-out`,
             }}
           >
             <CardMedia
               component="img"
-              image={SivaImage} // Replace this with actual image path
+              image={SivaImage}
               alt="Lord Shiva"
-              sx={{ height: '100%', objectFit: 'cover' }}
+              sx={{ height: '100%', width:'100%', objectFit: 'cover' }}
             />
           </Card>
         </Grid>
 
         {/* Right Side Content */}
         <Grid item xs={12} md={6}>
-          <Box>
+          <Box sx={{ ml: { md: 3 } }}> {/* Gap between image and text */}
             <Typography variant="subtitle1" sx={{ color: '#f97316', fontWeight: 'bold', mb: 1 }}>
               History
             </Typography>

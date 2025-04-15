@@ -83,7 +83,7 @@ const Footer = () => {
       {/* Bottom Text */}
       <Typography variant="body2" sx={{ fontSize: '1.1rem', mt:10 }}>
         Copyright © 2025 SRI SHAKTIPEETHA KOTI LINGA KSHETHRAM | Designed by
-        <Typography component="span" sx={{ color: '#00bcd4', ml: 1, fontWeight: 600 }}>
+        <Typography component="span" sx={{ color: '#90EE90', ml: 1, fontWeight: 600 }}>
           LEADXPO IT SOLUTIONS
         </Typography>
       </Typography>

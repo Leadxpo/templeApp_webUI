@@ -1,33 +1,29 @@
+import { useNavigate, useLocation, Outlet } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Button } from '@mui/material';
 import {
   AppBar,
   Toolbar,
-  Box,
   Typography,
-  Button,
+  Box,
   Avatar,
   Chip,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import Logo from "../../Images/Kotilinga Temple Logo 1.png"; // update the path if needed
 
-const Navbar = () => {
+import Logo from "../../Images/Kotilinga Temple Logo 1.png";
+
+const Navbar = ({ isHomePage }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [userData, setUserData] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUserData = JSON.parse(localStorage.getItem("userData"));
-    setUserData(storedUserData);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    localStorage.removeItem("userData");
-    setUserData(null);
-    navigate("/home");
-  };
+      const storedUser = localStorage.getItem("userData");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    }, []);
+ 
 
   const handleProfileNavigate = () => {
     navigate("/profile");
@@ -42,86 +38,68 @@ const Navbar = () => {
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
     { label: "Register", path: "/register" },
-    { label: "Log In", path: "/login" },
+    // { label: "Login", path: "/login" },
+    // { label: "Donate", path: "/donete" },
   ];
 
   return (
     <>
       <AppBar
-       position="absolute"
-       sx={{
-         backgroundColor: "rgba(0, 0, 0, 0.4)", // translucent black
-         color: "#fff",
-         height: 100,
-         boxShadow: "none",
-         zIndex: 1300,
-         backdropFilter: "blur(5px)", // optional: adds glassmorphism
-         justifyContent: "center",
-       }}
+        position="absolute"
+        sx={{
+          backgroundColor: isHomePage ? "transparent" : "#00000010", // Conditionally apply background
+          color: "#fff",
+          height: 100,
+          boxShadow: "none",position:'absolute',top:0,
+          // zIndex: 1000,
+          transition: "width 0.3s",
+          display: "flex",
+          justifyContent: "center",
+        }}
       >
-        <Toolbar sx={{ justifyContent: "space-between", height: "100%" }}>
-          {/* Left: Logo and Title */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          {/* Logo + Title */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 5 }}>
             <img src={Logo} alt="Logo" style={{ height: "70px" }} />
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                fontSize: "1.5rem",
-                fontFamily: "inherit",
-              }}
-            >
-              శ్రీ శక్తిపీఠ కోటి లింగ క్షేత్రం
-            </Typography>
+            <h2> Sri Shaktipeetha Koti Lenga Kshethram</h2>
           </Box>
 
-          {/* Middle: Nav Links */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
+          {/* Navigation + Avatar/Chip */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
             {navLinks.map((item) => (
               <Typography
                 key={item.path}
                 onClick={() => handleNavigation(item.path)}
                 sx={{
                   cursor: "pointer",
-                  color: location.pathname === item.path ? "#FF9900" : "#333",
-                  fontSize: "1.1rem",
-                  fontWeight: 500,
+                  color: location.pathname === item.path ? "#FFD700" : "#fff",
+                  fontSize: "1.2rem",
+                  transition: "color 0.3s ease",
                   "&:hover": {
-                    color: "#FF9900",
+                    color: "#FFD700",
                   },
                 }}
               >
                 {item.label}
               </Typography>
             ))}
-          </Box>
 
-          {/* Right: Donate + Profile */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#ff9900",
-                color: "#fff",
-                fontWeight: "bold",
-                px: 3,
-                "&:hover": {
-                  backgroundColor: "#e38800",
-                },
-              }}
-              onClick={() => handleNavigation("/donate")}
-            >
-              Donate
-            </Button>
-
-            {userData ? (
+            {/* Profile Chip or Avatar */}
+            {user ? (
               <Chip
-                label={userData?.userName || "Profile"}
+                label={user?.userName || "Profile"}
                 avatar={
                   <Avatar
                     src={
-                      userData?.profilePic
-                        ? `https://temple.signaturecutz.in/api/storage/userdp/${userData.profilePic}`
+                      user?.image
+                        ? `http://localhost:3001/storage/userdp/${user.profilePic}`
                         : ""
                     }
                     alt="Profile"
@@ -130,17 +108,43 @@ const Navbar = () => {
                 }
                 onClick={handleProfileNavigate}
                 variant="outlined"
-                sx={{ cursor: "pointer", backgroundColor: "#f5f5f5" }}
+                sx={{ cursor: "pointer", backgroundColor: "white" , "&:hover": {
+                  color: "#FFD700",
+                },}}
               />
             ) : (
               <Avatar sx={{ bgcolor: "gray" }} />
             )}
+
+
+<Button
+      onClick={() => navigate('/donete')}
+      variant="contained"
+      sx={{
+        backgroundColor: 'white',
+        color: 'black',
+        width: '8rem', // 52 * 0.25rem = 13rem
+        height: '3rem', // 20 * 0.25rem = 5rem
+        padding: '10px 20px',
+        borderRadius: '5px',
+        fontWeight: 'bold',
+        fontSize: '17px',
+        boxShadow: 3,
+        '&:hover': {
+          backgroundColor: '#FFD700', // equivalent to Tailwind's gray-100
+        },
+      }}
+    >
+      Donate
+    </Button>
+
+
           </Box>
         </Toolbar>
       </AppBar>
 
-      {/* Page Content */}
-      <Box >
+      {/* Content space */}
+      <Box sx={{ pt: isHomePage ? "0px" : "120px", backgroundColor: isHomePage ? "transparent" : "#000000", color: "#fff", minHeight: "100vh" }}>
         <Outlet />
       </Box>
     </>

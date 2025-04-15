@@ -29,14 +29,16 @@ const RegisterForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('https://temple.signaturecutz.in/api/user/login', formData);
+      // const response = await axios.post('http://localhost:3001/user/login', formData);
+      const response = await axios.post('https://temple.signaturecutz.in/user/login', formData);
+
       const { token, user } = response.data.data;
-      console.log("------------->", response.data.data)
-      console.log("token :", token);
-      console.log("token :", user);
+      console.log("------------->",response.data.data)
+console.log("token :",token);
+console.log("token :",user);
       localStorage.setItem('token', token);
       localStorage.setItem('userData', JSON.stringify(user));
-
+      
       alert('Login successful!');
       navigate('/profile'); // 👈 Redirect after login
     } catch (error) {

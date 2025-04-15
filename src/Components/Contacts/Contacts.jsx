@@ -1,18 +1,29 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+
 import templeImage from "../../Images/donetShiva.png"; // Adjust path as needed
 import RegisterFrom from "../../Components/Contacts/ContactComp";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Stack,
+  Link,
+} from '@mui/material';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import LogoImage from '../../Images/Kotilinga Temple Logo 1.png';
 
-import Footer from "../Footer/Footer";
+// import Footer from "../Footer/Footer";
 
 const RegisterBanner = () => {
   return (
     <Box
       sx={{
-        backgroundColor: "black", // 💥 Set entire page background
+        backgroundColor: "#0d1117", // 💥 Set entire page background
         minHeight: "100vh", // 💥 Make sure it covers full viewport height
         color: "white", // Default text color
-        px: 2, // Optional padding
+        px: 4, // Optional padding
         py: 4,
       }}
     >
@@ -21,7 +32,7 @@ const RegisterBanner = () => {
           position: "relative",
           width: "100%",
           height: { xs: 300, sm: 400, md: 500 },
-          borderRadius: 4,
+          borderRadius: 2,
           overflow: "hidden",
           mb: 5,
         }}
@@ -33,7 +44,7 @@ const RegisterBanner = () => {
           alt="Temple"
           sx={{
             width: "100%",
-            height: "100%",
+            height: "80%",
             objectFit: "cover",
             display: "block",
           }}
@@ -46,7 +57,7 @@ const RegisterBanner = () => {
             top: 0,
             left: 0,
             width: "100%",
-            height: "100%",
+            height: "80%",
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             display: "flex",
             flexDirection: "column",
@@ -59,7 +70,7 @@ const RegisterBanner = () => {
           <Typography
             variant="h2"
             sx={{
-              fontWeight: "semibold",
+              // fontWeight: "semibold",
               fontSize: { xs: "2rem", sm: "3rem", md: "4rem" },
             }}
           >
@@ -71,7 +82,7 @@ const RegisterBanner = () => {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ mb: 10 }}>
+      <Box sx={{ mb: 5 }}>
         <RegisterFrom />
       </Box>
 
@@ -94,9 +105,81 @@ const RegisterBanner = () => {
           title="Nirmaan Park Map"
         />
       </Box>
-      <Box>
-        <Footer />
+      <Box
+      sx={{
+        backgroundColor: '#0d1117',
+        color: '#fff',
+        py: 4,
+        px: 3,
+        textAlign: 'center',
+        mt:10
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          maxWidth: '1200px',
+          mx: 'auto',
+          mb: 2,
+        }}
+      >
+        {/* Left - Logo */}
+        <Box sx={{ mb: { xs: 2, md: 0 } }}>
+          <img
+            src={LogoImage} // Replace with your logo path
+            alt="Logo"
+            style={{ height: 80 }}
+          />
+        </Box>
+
+        {/* Center - Navigation Links */}
+        <Stack
+          direction="row"
+          spacing={4}
+          sx={{ mb: { xs: 2, md: 0 }, flexWrap: 'wrap' }}
+        >
+          {['Home', 'About', 'Contact', 'Register', 'Log In'].map((item) => (
+            <Link
+              key={item}
+              href={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
+              underline="none"
+              sx={{
+                color: 'white',
+                fontSize: '1.3rem',
+                fontWeight: 500,
+                '&:hover': { color: '#ccc' },
+              }}
+            >
+              {item}
+            </Link>
+          ))}
+        </Stack>
+
+        {/* Right - Social Icons */}
+        <Stack direction="row" spacing={2}>
+  <IconButton href="https://facebook.com" target="_blank" sx={{ color: 'white' }}>
+    <FacebookIcon fontSize="large" />
+  </IconButton>
+  <IconButton href="https://instagram.com" target="_blank" sx={{ color: 'white' }}>
+    <InstagramIcon fontSize="large" />
+  </IconButton>
+  <IconButton href="https://youtube.com" target="_blank" sx={{ color: 'white' }}>
+    <YouTubeIcon fontSize="large" />
+  </IconButton>
+</Stack>
       </Box>
+
+      {/* Bottom Text */}
+      <Typography variant="body2" sx={{ fontSize: '1.1rem', mt:10 }}>
+        Copyright © 2025 SRI SHAKTIPEETHA KOTI LINGA KSHETHRAM | Designed by
+        <Typography component="span" sx={{ color: '#90EE90', ml: 1, fontWeight: 600 }}>
+          LEADXPO IT SOLUTIONS
+        </Typography>
+      </Typography>
+    </Box>
       {/* You can place the registration form here if needed */}
     </Box>
   );

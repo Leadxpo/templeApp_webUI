@@ -13,7 +13,7 @@ const RegisterBanner = () => {
         backgroundColor: 'black',   // 💥 Set entire page background
         minHeight: '100vh',         // 💥 Make sure it covers full viewport height
         color: 'white',             // Default text color
-        px: 2,                      // Optional padding
+        px: 4,                      // Optional padding
         py: 4,
       }}
     >
@@ -22,9 +22,9 @@ const RegisterBanner = () => {
           position: 'relative',
           width: '100%',
           height: { xs: 300, sm: 400, md: 500 },
-          borderRadius: 4,
+          borderRadius: 2,
           overflow: 'hidden',
-          mb: 2,
+          
         }}
       >
         {/* Background Image */}
@@ -34,7 +34,7 @@ const RegisterBanner = () => {
           alt="Temple"
           sx={{
             width: '100%',
-            height: '100%',
+            height: '70%',
             objectFit: 'cover',
             display: 'block',
           }}
@@ -47,8 +47,8 @@ const RegisterBanner = () => {
             top: 0,
             left: 0,
             width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            height: '70%',
+            backgroundColor: 'rgba(0, 0, 0, 0.1)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -57,7 +57,7 @@ const RegisterBanner = () => {
             px: 2,
           }}
         >
-          <Typography variant="h2" sx={{ fontWeight: 'bold', fontSize: { xs: '2rem', sm: '3rem', md: '4rem' } }}>
+          <Typography variant="h6" sx={{ fontSize: { xs: '2rem', sm: '3rem', md: '4rem' } }}>
             Log In
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: '800px', mt: 2 }}>
@@ -65,7 +65,7 @@ const RegisterBanner = () => {
           </Typography>
         </Box>
       </Box>
-<Box sx={{mb:5}}>
+<Box >
   <RegisterFrom/>
 </Box>
 <Box >
