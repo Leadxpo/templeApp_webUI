@@ -42,7 +42,7 @@ function HomepageComponent() {
     >
       <div className="homepage-container">
         <video autoPlay loop muted className="video-bg">
-          <source src={MainVideo} type="video/mp4" />
+          <source src="/images/KotilingaTempleRenders.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
 
