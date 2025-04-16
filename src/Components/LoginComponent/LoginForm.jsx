@@ -1,18 +1,13 @@
 // LoginPage.jsx
-import React from 'react';
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-} from '@mui/material';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Box, Typography, TextField, Button } from "@mui/material";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
   const [formData, setFormData] = React.useState({
-    userId: '',
-    password: '',
+    userId: "",
+    password: "",
   });
 
   const navigate = useNavigate();
@@ -29,34 +24,36 @@ const RegisterForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('https://temple.signaturecutz.in/api/user/login', formData);
-      // const response = await axios.post('https://temple.signaturecutz.in/user/login', formData);
+      const response = await axios.post(
+        "https://temple.signaturecutz.in/user/api/login",
+        formData
+      );
 
       const { token, user } = response.data.data;
-      console.log("------------->",response.data.data)
-console.log("token :",token);
-console.log("token :",user);
-      localStorage.setItem('token', token);
-      localStorage.setItem('userData', JSON.stringify(user));
-      
-      alert('Login successful!');
-      navigate('/profile'); // 👈 Redirect after login
+      console.log("------------->", response.data.data);
+      console.log("token :", token);
+      console.log("token :", user);
+      localStorage.setItem("token", token);
+      localStorage.setItem("userData", JSON.stringify(user));
+
+      alert("Login successful!");
+      navigate("/profile"); // 👈 Redirect after login
     } catch (error) {
-      console.error('Login error:', error.response?.data || error.message);
-      alert('Login failed. Please check your credentials.');
+      console.error("Login error:", error.response?.data || error.message);
+      alert("Login failed. Please check your credentials.");
     }
   };
 
   const textFieldStyles = {
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: 'white',
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "white",
       },
-      '&:hover fieldset': {
-        borderColor: 'white',
+      "&:hover fieldset": {
+        borderColor: "white",
       },
-      '&.Mui-focused fieldset': {
-        borderColor: 'white',
+      "&.Mui-focused fieldset": {
+        borderColor: "white",
       },
     },
   };
@@ -64,25 +61,25 @@ console.log("token :",user);
   return (
     <Box
       sx={{
-        backgroundColor: 'black',
-        minHeight: '100vh',
+        backgroundColor: "black",
+        minHeight: "100vh",
         py: 4,
         px: 2,
-        color: 'white',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        color: "white",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <Box
         component="form"
         onSubmit={handleSubmit}
         sx={{
-          backgroundColor: '#121212',
+          backgroundColor: "#121212",
           p: 4,
           borderRadius: 2,
-          width: '100%',
-          maxWidth: '600px',
+          width: "100%",
+          maxWidth: "600px",
           boxShadow: 3,
         }}
       >
@@ -97,8 +94,8 @@ console.log("token :",user);
           onChange={handleChange}
           fullWidth
           margin="normal"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white', height: '56px' } }}
+          InputLabelProps={{ style: { color: "white" } }}
+          InputProps={{ style: { color: "white", height: "56px" } }}
           sx={textFieldStyles}
         />
 
@@ -110,8 +107,8 @@ console.log("token :",user);
           onChange={handleChange}
           fullWidth
           margin="normal"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white', height: '56px' } }}
+          InputLabelProps={{ style: { color: "white" } }}
+          InputProps={{ style: { color: "white", height: "56px" } }}
           sx={textFieldStyles}
         />
 

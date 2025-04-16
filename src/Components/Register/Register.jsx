@@ -24,11 +24,11 @@ const RegisterForm = () => {
     dob: '',
     maritalStatus: '',
     gender: '',
-    email:'',
-    userId:'',
+    email: '',
+    userId: '',
     password: '',
     profilePic: null,
-    donateNumber: '',
+    // donateNumber: '',
   });
 
   const handleChange = (e) => {
@@ -39,14 +39,38 @@ const RegisterForm = () => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      profilePic: e.target.files[0],
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = new FormData();
+
+    for (const key in formData) {
+      if (formData[key]) {
+        data.append(key, formData[key]);
+      }
+    }
+
     try {
-      const response = await axios.post('https://temple.signaturecutz.in/api/user/register', formData);
-      // const response = await axios.post('https://temple.signaturecutz.in/user/register', formData);
+      const response = await axios.post(
+        'https://temple.signaturecutz.in/user/api/register',
+        data,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
 
       console.log('Registration successful:', response.data);
       alert('User registered successfully!');
+
+      // Reset form
       setFormData({
         userName: '',
         phoneNumber: '',
@@ -59,7 +83,7 @@ const RegisterForm = () => {
         userId: '',
         password: '',
         profilePic: null,
-      donateNumber: '',
+        // donateNumber: '',
       });
     } catch (error) {
       console.error('Registration failed:', error);
@@ -105,82 +129,60 @@ const RegisterForm = () => {
           maxWidth: '800px',
           boxShadow: 3,
         }}
+        encType="multipart/form-data"
       >
         <Typography variant="h4" gutterBottom align="center">
           Register
         </Typography>
 
+        {/* All TextFields */}
+        {[
+          { label: 'Name', name: 'userName' },
+          { label: 'Phone Number', name: 'phoneNumber' },
+          { label: 'Aadhar Number', name: 'aadharNumber' },
+          { label: 'Address', name: 'address', multiline: true, rows: 2 },
+          { label: 'Email', name: 'email' },
+          // { label: 'Donate Number', name: 'donateNumber' },
+          { label: 'User ID', name: 'userId' },
+          { label: 'Password', name: 'password', type: 'password' },
+        ].map(({ label, name, multiline, rows, type = 'text' }) => (
+          <TextField
+            key={name}
+            label={label}
+            name={name}
+            value={formData[name]}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            multiline={multiline}
+            rows={rows}
+            type={type}
+            InputLabelProps={{ style: { color: 'white' } }}
+            InputProps={{ style: { color: 'white', height: '56px' } }}
+            sx={textFieldStyles}
+          />
+        ))}
+
+        {/* DOB */}
         <TextField
-          label="Name"
-          name="userName"
-          value={formData.userName}
+          label="Date of Birth"
+          type="date"
+          name="dob"
+          value={formData.dob}
           onChange={handleChange}
           fullWidth
           margin="normal"
-          InputLabelProps={{ style: { color: 'white' } }}
+          InputLabelProps={{ shrink: true, style: { color: 'white' } }}
           InputProps={{ style: { color: 'white', height: '56px' } }}
-          sx={textFieldStyles}
+          sx={{
+            ...textFieldStyles,
+            '& input[type="date"]::-webkit-calendar-picker-indicator': {
+              filter: 'invert(1)',
+            },
+          }}
         />
 
-        <TextField
-          label="Phone Number"
-          name="phoneNumber"
-          value={formData.phoneNumber}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white', height: '56px' } }}
-          sx={textFieldStyles}
-        />
-
-        <TextField
-          label="Aadhar Number"
-          name="aadharNumber"
-          value={formData.aadharNumber}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white', height: '56px' } }}
-          sx={textFieldStyles}
-        />
-
-        <TextField
-          label="Address"
-          name="address"
-          value={formData.address}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          multiline
-          rows={2}
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white' } }}
-          sx={textFieldStyles}
-        />
-
-<TextField
-  label="Date of Birth"
-  type="date"
-  name="dob"
-  value={formData.dob}
-  onChange={handleChange}
-  fullWidth
-  margin="normal"
-  InputLabelProps={{ shrink: true, style: { color: 'white' } }}
-  InputProps={{
-    style: { color: 'white', height: '56px' },
-  }}
-  sx={{
-    ...textFieldStyles,
-    '& input[type="date"]::-webkit-calendar-picker-indicator': {
-      filter: 'invert(1)',
-    },
-  }}
-/>
-
-
+        {/* Marital Status */}
         <FormControl fullWidth margin="normal" sx={textFieldStyles}>
           <InputLabel sx={{ color: 'white' }}>Marital Status</InputLabel>
           <Select
@@ -198,6 +200,7 @@ const RegisterForm = () => {
           </Select>
         </FormControl>
 
+        {/* Gender */}
         <FormControl component="fieldset" margin="normal">
           <FormLabel component="legend" sx={{ color: 'white' }}>
             Gender
@@ -221,73 +224,18 @@ const RegisterForm = () => {
           </RadioGroup>
         </FormControl>
 
-        <TextField
-          label="Email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white', height: '56px' } }}
-          sx={textFieldStyles}
-        />
-
-        {/* Donate Number */}
-        <TextField
-          label="Donate Number"
-          name="donateNumber"
-          value={formData.donateNumber || ''}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white', height: '56px' } }}
-          sx={textFieldStyles}
-        />
-
-        {/* Profile Image Upload */}
+        {/* Profile Image */}
         <Box sx={{ mt: 2, mb: 2 }}>
           <Typography sx={{ color: 'white', mb: 1 }}>Upload Profile Image</Typography>
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => {
-              setFormData((prev) => ({
-                ...prev,
-                profilePic: e.target.files[0],
-              }));
-            }}
+            onChange={handleFileChange}
             style={{ color: 'white' }}
           />
         </Box>
 
-
-<TextField
-          label="User ID"
-          name="userId"
-          value={formData.userId}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white', height: '56px' } }}
-          sx={textFieldStyles}
-        />
-
-        <TextField
-          label="Password"
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white', height: '56px' } }}
-          sx={textFieldStyles}
-        />
-
+        {/* Submit Button */}
         <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }}>
           Register
         </Button>

@@ -49,7 +49,7 @@ const Footer = () => {
           spacing={4}
           sx={{ mb: { xs: 2, md: 0 }, flexWrap: 'wrap' }}
         >
-          {['Home', 'About', 'Contact', 'Register', 'Log In'].map((item) => (
+          {['Home', 'About', 'Contact', 'Register', 'Login'].map((item) => (
             <Link
               key={item}
               href={`/${item.toLowerCase().replace(/\s+/g, '-')}`}

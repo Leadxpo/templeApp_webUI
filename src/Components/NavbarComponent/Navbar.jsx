@@ -1,6 +1,5 @@
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { Button } from '@mui/material';
 import {
   AppBar,
   Toolbar,
@@ -8,29 +7,45 @@ import {
   Box,
   Avatar,
   Chip,
+  Button,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  useMediaQuery,
 } from "@mui/material";
-
+import MenuIcon from "@mui/icons-material/Menu";
 import Logo from "../../Images/KotilingaTempleLogo1.png";
 
 const Navbar = ({ isHomePage }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const isMobile = useMediaQuery("(max-width:768px)");
 
   useEffect(() => {
-      const storedUser = localStorage.getItem("userData");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    }, []);
- 
+    const storedUser = localStorage.getItem("userData");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const handleProfileNavigate = () => {
-    navigate("/profile");
+    console.log("clicked");
+    if (!user) {
+      // Navigate to the login page if the user is not logged in
+      navigate("/login");
+    } else {
+      // Navigate to the profile page if the user is logged in
+      navigate("/profile");
+    }
   };
 
   const handleNavigation = (path) => {
     navigate(path);
+    setDrawerOpen(false);
   };
 
   const navLinks = [
@@ -38,8 +53,6 @@ const Navbar = ({ isHomePage }) => {
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
     { label: "Register", path: "/register" },
-    // { label: "Login", path: "/login" },
-    // { label: "Donate", path: "/donete" },
   ];
 
   return (
@@ -47,12 +60,11 @@ const Navbar = ({ isHomePage }) => {
       <AppBar
         position="absolute"
         sx={{
-          backgroundColor: isHomePage ? "transparent" : "#00000010", // Conditionally apply background
+          backgroundColor: isHomePage ? "transparent" : "#00000010",
           color: "#fff",
           height: 100,
-          boxShadow: "none",position:'absolute',top:0,
-          // zIndex: 1000,
-          transition: "width 0.3s",
+          boxShadow: "none",
+          top: 0,
           display: "flex",
           justifyContent: "center",
         }}
@@ -63,88 +75,142 @@ const Navbar = ({ isHomePage }) => {
             justifyContent: "space-between",
             alignItems: "center",
             height: "100%",
+            px: 2,
           }}
         >
           {/* Logo + Title */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 5 }}>
-            <img src={Logo} alt="Logo" style={{ height: "70px" }} />
-            <h2> Sri Shaktipeetha Koti Lenga Kshethram</h2>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <img src={Logo} alt="Logo" style={{ height: "60px" }} />
+            {!isMobile && (
+              <Typography variant="h6">
+                Sri Shaktipeetha Koti Linga Kshethram
+              </Typography>
+            )}
           </Box>
 
-          {/* Navigation + Avatar/Chip */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-            {navLinks.map((item) => (
-              <Typography
-                key={item.path}
-                onClick={() => handleNavigation(item.path)}
+          {/* Desktop Navigation */}
+          {!isMobile ? (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+              {navLinks.map((item) => (
+                <Typography
+                  key={item.path}
+                  onClick={() => handleNavigation(item.path)}
+                  sx={{
+                    cursor: "pointer",
+                    color: location.pathname === item.path ? "#FFD700" : "#fff",
+                    fontSize: "1.1rem",
+                    "&:hover": {
+                      color: "#FFD700",
+                    },
+                  }}
+                >
+                  {item.label}
+                </Typography>
+              ))}
+
+              {user ? (
+                <Chip
+                  label={user?.userName || "Profile"}
+                  avatar={
+                    <Avatar
+                      src={
+                        user?.image
+                          ? `https://temple.signaturecutz.in/storege/userdp/${user.profilePic}`
+                          : ""
+                      }
+                      alt="Profile"
+                      sx={{ width: 40, height: 40 }}
+                    />
+                  }
+                  onClick={handleProfileNavigate}
+                  variant="outlined"
+                  sx={{
+                    cursor: "pointer",
+                    backgroundColor: "white",
+                    "&:hover": {
+                      color: "#FFD700",
+                    },
+                  }}
+                />
+              ) : (
+                <Avatar
+                  onClick={handleProfileNavigate}
+                  sx={{ bgcolor: "gray" }}
+                />
+              )}
+
+              <Button
+                onClick={() => navigate("/donete")}
+                variant="contained"
                 sx={{
-                  cursor: "pointer",
-                  color: location.pathname === item.path ? "#FFD700" : "#fff",
-                  fontSize: "1.2rem",
-                  transition: "color 0.3s ease",
+                  backgroundColor: "white",
+                  color: "black",
+                  width: "8rem",
+                  height: "3rem",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  fontWeight: "bold",
+                  fontSize: "17px",
+                  boxShadow: 3,
                   "&:hover": {
-                    color: "#FFD700",
+                    backgroundColor: "#FFD700",
                   },
                 }}
               >
-                {item.label}
-              </Typography>
-            ))}
-
-            {/* Profile Chip or Avatar */}
-            {user ? (
-              <Chip
-                label={user?.userName || "Profile"}
-                avatar={
-                  <Avatar
-                    src={
-                      user?.image
-                        ? `https://temple.signaturecutz.in/api//storage/userdp/${user.profilePic}`
-                        : ""
-                    }
-                    alt="Profile"
-                    sx={{ width: 40, height: 40 }}
-                  />
-                }
-                onClick={handleProfileNavigate}
-                variant="outlined"
-                sx={{ cursor: "pointer", backgroundColor: "white" , "&:hover": {
-                  color: "#FFD700",
-                },}}
-              />
-            ) : (
-              <Avatar sx={{ bgcolor: "gray" }} />
-            )}
-
-
-<Button
-      onClick={() => navigate('/donete')}
-      variant="contained"
-      sx={{
-        backgroundColor: 'white',
-        color: 'black',
-        width: '8rem', // 52 * 0.25rem = 13rem
-        height: '3rem', // 20 * 0.25rem = 5rem
-        padding: '10px 20px',
-        borderRadius: '5px',
-        fontWeight: 'bold',
-        fontSize: '17px',
-        boxShadow: 3,
-        '&:hover': {
-          backgroundColor: '#FFD700', // equivalent to Tailwind's gray-100
-        },
-      }}
-    >
-      Donate
-    </Button>
-
-
-          </Box>
+                Donate
+              </Button>
+            </Box>
+          ) : (
+            // Mobile Menu Icon
+            <IconButton onClick={() => setDrawerOpen(true)} color="inherit">
+              <MenuIcon />
+            </IconButton>
+          )}
         </Toolbar>
       </AppBar>
 
-      {/* Content space */}
-      <Box sx={{ pt: isHomePage ? "0px" : "120px", backgroundColor: isHomePage ? "transparent" : "#000000", color: "#fff", minHeight: "100vh" }}>
+      {/* Drawer for Mobile */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
+        <Box sx={{ width: 250, padding: 2 }}>
+          <List>
+            {navLinks.map((item) => (
+              <ListItem
+                button
+                key={item.path}
+                onClick={() => handleNavigation(item.path)}
+              >
+                <ListItemText
+                  primary={item.label}
+                  primaryTypographyProps={{
+                    color:
+                      location.pathname === item.path ? "#FFD700" : "black",
+                  }}
+                />
+              </ListItem>
+            ))}
+            <ListItem button onClick={handleProfileNavigate}>
+              <ListItemText primary="Profile" />
+            </ListItem>
+            <ListItem button onClick={() => navigate("/donete")}>
+              <ListItemText primary="Donate" />
+            </ListItem>
+          </List>
+        </Box>
+      </Drawer>
+
+      {/* Page Content */}
+      <Box
+        sx={{
+          pt: isHomePage ? "0px" : "120px",
+          backgroundColor: isHomePage ? "transparent" : "#000000",
+          color: "#fff",
+          minHeight: "100vh",
+        }}
+      >
         <Outlet />
       </Box>
     </>

@@ -3,6 +3,7 @@ import MainVideo from "../../Images/KotilingaTempleRenders.mp4";
 import { BsFire } from "react-icons/bs";
 import { HiMoon } from "react-icons/hi";
 import { FaFire } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -15,13 +16,14 @@ import Image1 from "../../Images/KotilingaTempleRenders-6.jpg";
 import Image2 from "../../Images/KotilingaTempleRenders-31.jpg";
 import Image3 from "../../Images/KotilingaTempleRenders-34.jpg";
 import donationImg from "../../Images/KotilingaTempleRenders-2.jpg"; // Replace with your image path
-import Footer from '../../Components/Footer/Footer'; 
+import Footer from "../../Components/Footer/Footer";
 
 // import Image4 from "../../Images/Kotilinga Temple Renders-34.jpg"
 
 import "./HomepageComponent.css";
 
 function HomepageComponent() {
+  const navigate = useNavigate();
   const settings = {
     dots: true,
     arrows: false,
@@ -38,7 +40,7 @@ function HomepageComponent() {
   return (
     <div
       className="main-container"
-      style={{ backgroundImage:` url(${donationImg})` }}
+      style={{ backgroundImage: ` url(${donationImg})` }}
     >
       <div className="homepage-container">
         <video autoPlay loop muted className="video-bg">
@@ -49,16 +51,20 @@ function HomepageComponent() {
         <div className="video-overlay"></div>
 
         <div className="video-content">
-          <h1 className="video-heading" style={{marginLeft:100}}>Welcome To</h1>
+          <h1 className="video-heading">Welcome To</h1>
 
-          <h1 className="video-title" style={{marginLeft:100}}>
-            Sri Shaktipeetha Koti Linga <br className="break" /> Kshethram
+          <h1 className="video-title">
+            <span>Sri Shaktipeetha Koti Linga</span>
+            <br />
+            <span className="break-line">Kshethram</span>
           </h1>
 
-          <p className="video-subtitle" style={{marginLeft:100}}>
+          <p className="video-subtitle">
             A Divine Abode of Lord Shiva – Experience the Eternal Blessings
           </p>
-          <button className="donate-button" style={{marginLeft:100}}>Donate Now</button>
+          <button onClick={() => navigate("/donete")} className="donate-button">
+            Donate Now
+          </button>
         </div>
       </div>
 
@@ -115,7 +121,7 @@ function HomepageComponent() {
               devotees to meditate, seek blessings, and experience the ultimate
               connection with the divine.
             </p>
-            <button>Learn More</button>
+            <button onClick={() => navigate("/about")}>Learn More</button>
           </div>
         </div>
 
@@ -175,7 +181,7 @@ function HomepageComponent() {
       </div>
 
       <WhyUsSection />
-      <Footer/>
+      <Footer />
     </div>
   );
 }
@@ -254,6 +260,5 @@ const WhyUsSection = () => {
         </div>
       </div>
     </section>
-
   );
 };

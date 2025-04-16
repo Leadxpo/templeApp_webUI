@@ -81,7 +81,7 @@ const Profile = () => {
               <Avatar
                 src={
                   user?.profilePic
-                    ? `https://temple.signaturecutz.in/api/storage/userdp/${user.profilePic}`
+                    ? `https://temple.signaturecutz.in/storege/userdp/${user.profilePic}`
                     : ""
                 }
                 sx={{ width: 100, height: 100 }}
