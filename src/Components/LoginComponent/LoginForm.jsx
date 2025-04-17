@@ -22,28 +22,28 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post(
-        "https://localhost:3001/user/api/login",
+        "http://localhost:3001/user/api/login", // ✅ Fixed here
         formData
       );
-
+  
       const { token, user } = response.data.data;
       console.log("------------->", response.data.data);
       console.log("token :", token);
       console.log("token.... :", user);
       localStorage.setItem("token", token);
       localStorage.setItem("userData", JSON.stringify(user));
-
+  
       alert("Login successful!");
-      navigate("/profile"); // 👈 Redirect after login
+      navigate("/profile");
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
       alert("Login failed. Please check your credentials.");
     }
   };
-
+  
   const textFieldStyles = {
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
