@@ -18,10 +18,14 @@ import {
 import { Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Footer from "../Components/Footer/Footer";
+import axios from "axios";
+
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [marriageStatus, setMarriageStatus] = useState("");
+  const [donations, setDonations] = useState([]);
+
 
   const navigate = useNavigate();
 
@@ -33,6 +37,20 @@ const Profile = () => {
       setMarriageStatus(parsedUser.marriageStatus || "");
     }
   }, []);
+
+  useEffect(() => {
+    if (user?.userId) {
+      axios
+        .get("https://localhost:3001/user/api/donations")
+        .then((res) => {
+          setDonations(res.data);
+        })
+        .catch((err) => {
+          console.error("Error fetching donation data:", err);
+        });
+    }
+  }, [user]);
+  
 
   const inputStyles = {
     color: "white",
@@ -235,6 +253,34 @@ const Profile = () => {
           )}
         </CardContent>
       </Card>
+
+
+      <Box sx={{ mt: 5, color: "white" }}>
+  <Typography variant="h6" gutterBottom>Donation Details</Typography>
+  <Divider sx={{ backgroundColor: "white", mb: 2 }} />
+
+  {donations.length > 0 ? (
+    donations.map((donation, index) => (
+      <Card
+        key={index}
+        sx={{
+          backgroundColor: "#161b22",
+          mb: 2,
+          padding: 2,
+          border: "1px solid white",
+        }}
+      >
+        <Typography>Amount: ₹{donation.amount}</Typography>
+        <Typography>Date: {new Date(donation.date).toLocaleDateString()}</Typography>
+        <Typography>Mode: {donation.mode}</Typography>
+        <Typography>Remark: {donation.remark}</Typography>
+      </Card>
+    ))
+  ) : (
+    <Typography>No donation records found.</Typography>
+  )}
+</Box>
+
       <Box sx={{ mt: 15 }}>
         <Footer />
       </Box>
