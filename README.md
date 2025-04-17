@@ -1,7 +1,7 @@
 <<<<<<< HEAD
 =======
 <<<<<<< HEAD
-# GigHelp_webUI
+# temple_webUI
 website for work application
 =======
 >>>>>>> 0cd4a53 (Initialize project using Create React App)
