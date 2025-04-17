@@ -91,7 +91,7 @@ const Profile = () => {
                 <Avatar
                   src={
                     user?.profilePic
-                      ? `https://temple.signaturecutz.in/storege/userdp/${user.profilePic}`
+                      ? `http://localhost:3001/storege/userdp/${user.profilePic}`
                       : ""
                   }
                   sx={{ width: 100, height: 100 }}
@@ -152,49 +152,22 @@ const Profile = () => {
                 />
               </Grid>
 
-              {/* <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Donate Number"
-                  defaultValue={user.donateNumber}
+                  label="Gender"
+                  defaultValue={user.gender}
                   {...textFieldProps}
                 />
-              </Grid> */}
+              </Grid>
 
               <Grid item xs={12} sm={6}>
-                <FormControl fullWidth sx={{ color: "white" }}>
-                  <InputLabel
-                    id="marriage-status-label"
-                    sx={{ color: "white" }}
-                  >
-                    Marriage Status
-                  </InputLabel>
-                  <Select
-                    labelId="marriage-status-label"
-                    id="marriage-status"
-                    value={marriageStatus}
-                    onChange={(e) => setMarriageStatus(e.target.value)}
-                    label="Marriage Status"
-                    sx={{
-                      color: "white",
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "white",
-                      },
-                      "&:hover .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "white",
-                      },
-                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "white",
-                      },
-                      "& .MuiSelect-icon": {
-                        color: "white",
-                      },
-                    }}
-                  >
-                    <MenuItem value="Single">Single</MenuItem>
-                    <MenuItem value="Married">Married</MenuItem>
-                  </Select>
-                </FormControl>
+                <TextField
+                  fullWidth
+                  label="Married Status"
+                  defaultValue={user.marriage_status || "Not Provided"}
+                  {...textFieldProps}
+                />
               </Grid>
 
               <Grid item xs={12} sm={6}>

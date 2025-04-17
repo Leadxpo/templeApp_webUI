@@ -24,13 +24,12 @@ const RegisterForm = () => {
     aadharNumber: "",
     address: "",
     dob: "",
-    maritalStatus: "",
+    marriage_status: "",
     gender: "",
     email: "",
     userId: "",
     password: "",
     profilePic: null,
-    // donateNumber: '',
   });
 
   const handleChange = (e) => {
@@ -52,6 +51,13 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Manual validation for gender
+    if (!formData.gender) {
+      alert("Please select your gender");
+      return;
+    }
+
     const data = new FormData();
 
     for (const key in formData) {
@@ -81,19 +87,19 @@ const RegisterForm = () => {
         aadharNumber: "",
         address: "",
         dob: "",
-        maritalStatus: "",
+        marriage_status: "",
         gender: "",
         email: "",
         userId: "",
         password: "",
         profilePic: null,
-        // donateNumber: '',
       });
+
+      navigate("/login");
     } catch (error) {
       console.error("Registration failed:", error);
       alert("Failed to register user. Please try again.");
     }
-    navigate("/login");
   };
 
   const textFieldStyles = {
@@ -140,14 +146,13 @@ const RegisterForm = () => {
           Register
         </Typography>
 
-        {/* All TextFields */}
+        {/* Required TextFields */}
         {[
           { label: "Name", name: "userName" },
           { label: "Phone Number", name: "phoneNumber" },
           { label: "Aadhar Number", name: "aadharNumber" },
           { label: "Address", name: "address", multiline: true, rows: 2 },
           { label: "Email", name: "email" },
-          // { label: 'Donate Number', name: 'donateNumber' },
           { label: "User ID", name: "userId" },
           { label: "Password", name: "password", type: "password" },
         ].map(({ label, name, multiline, rows, type = "text" }) => (
@@ -158,6 +163,7 @@ const RegisterForm = () => {
             value={formData[name]}
             onChange={handleChange}
             fullWidth
+            required
             margin="normal"
             multiline={multiline}
             rows={rows}
@@ -168,7 +174,7 @@ const RegisterForm = () => {
           />
         ))}
 
-        {/* DOB */}
+        {/* Date of Birth */}
         <TextField
           label="Date of Birth"
           type="date"
@@ -176,6 +182,7 @@ const RegisterForm = () => {
           value={formData.dob}
           onChange={handleChange}
           fullWidth
+          required
           margin="normal"
           InputLabelProps={{ shrink: true, style: { color: "white" } }}
           InputProps={{ style: { color: "white", height: "56px" } }}
@@ -188,11 +195,11 @@ const RegisterForm = () => {
         />
 
         {/* Marital Status */}
-        <FormControl fullWidth margin="normal" sx={textFieldStyles}>
+        <FormControl fullWidth required margin="normal" sx={textFieldStyles}>
           <InputLabel sx={{ color: "white" }}>Marital Status</InputLabel>
           <Select
-            name="maritalStatus"
-            value={formData.maritalStatus}
+            name="marriage_status"
+            value={formData.marriage_status}
             onChange={handleChange}
             sx={{
               color: "white",
@@ -206,7 +213,7 @@ const RegisterForm = () => {
         </FormControl>
 
         {/* Gender */}
-        <FormControl component="fieldset" margin="normal">
+        <FormControl component="fieldset" required margin="normal">
           <FormLabel component="legend" sx={{ color: "white" }}>
             Gender
           </FormLabel>
