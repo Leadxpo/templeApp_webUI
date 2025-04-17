@@ -11,21 +11,26 @@ import {
   Avatar,
   IconButton,
   Divider,
-  FormControl, InputLabel,Box,
+  FormControl,
+  InputLabel,
+  Box,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import Footer from '../Components/Footer/Footer'; 
-
+import Footer from "../Components/Footer/Footer";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const [marriageStatus, setMarriageStatus] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("userData");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setMarriageStatus(parsedUser.marriageStatus || "");
     }
   }, []);
 
@@ -60,125 +65,180 @@ const Profile = () => {
 
   return (
     <>
-    <Card
-      sx={{
-        maxWidth: 1200,
-        margin: "40px auto",
-        padding: 2,
-        backgroundColor: "#0d1117",
-        // border: "1px solid white",
-      }}
-    >
-      <CardContent>
-        <Typography variant="h5" gutterBottom align="center" sx={{ color: "white" }}>
-          My Profile
-        </Typography>
-        <Divider sx={{ mb: 12, backgroundColor: "white" }} />
-
-        {user ? (
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={4} display="flex" alignItems="center">
-              <Avatar
-                src={
-                  user?.profilePic
-                    ? `https://temple.signaturecutz.in/storege/userdp/${user.profilePic}`
-                    : ""
-                }
-                sx={{ width: 100, height: 100 }}
-              />
-              <IconButton sx={{ marginLeft: 2, color: "white" }}>
-                <Edit />
-              </IconButton>
-            </Grid>
-
-            <Grid item xs={12} sm={4}>
-              <TextField fullWidth label="Name" defaultValue={user.userName} {...textFieldProps} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField fullWidth label="User ID" defaultValue={user.userId}  {...textFieldProps} />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="Email" defaultValue={user.email} {...textFieldProps} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="Phone" defaultValue={user.phoneNumber} {...textFieldProps} />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="DOB" defaultValue={user.dob} {...textFieldProps} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="Aadhar Number" defaultValue={user.aadharNumber} {...textFieldProps} />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="Donate Number" defaultValue={user.donateNumber} {...textFieldProps} />
-            </Grid>
-
-
-<Grid item xs={12} sm={6}>
-  <FormControl fullWidth sx={{ color: "white" }}>
-    <InputLabel
-      id="marriage-status-label"
-      sx={{ color: "white" }}
-    >
-      Marriage Status
-    </InputLabel>
-    <Select
-      labelId="marriage-status-label"
-      id="marriage-status"
-      value={user?.marrege_status || ""}
-      label="Marriage Status"
-      sx={{
-        color: "white",
-        "& .MuiOutlinedInput-notchedOutline": {
-          borderColor: "white",
-        },
-        "&:hover .MuiOutlinedInput-notchedOutline": {
-          borderColor: "white",
-        },
-        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-          borderColor: "white",
-        },
-        "& .MuiSelect-icon": {
-          color: "white",
-        },
-      }}
-    >
-      <MenuItem value="Single">Single</MenuItem>
-      <MenuItem value="Married">Married</MenuItem>
-    </Select>
-  </FormControl>
-</Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="Address" defaultValue={user.address || "Not Provided"} {...textFieldProps} />
-            </Grid>
-
-            <Grid item xs={12} display="flex" justifyContent="flex-end">
-              <Button variant="outlined" sx={{ mr: 2, color: "white", borderColor: "white" }}>
-                Cancel
-              </Button>
-              <Button variant="contained" sx={{ mr: 2, backgroundColor: "white", color: "black" }}>
-                Save
-              </Button>
-              <Button variant="contained" color="error" onClick={handleLogout}>
-                Logout
-              </Button>
-            </Grid>
-          </Grid>
-        ) : (
-          <Typography align="center" sx={{ color: "white" }}>
-            Loading...
+      <Card
+        sx={{
+          maxWidth: 1200,
+          margin: "40px auto",
+          padding: 2,
+          backgroundColor: "#0d1117",
+          // border: "1px solid white",
+        }}
+      >
+        <CardContent>
+          <Typography
+            variant="h5"
+            gutterBottom
+            align="center"
+            sx={{ color: "white" }}
+          >
+            My Profile
           </Typography>
-        )}
-      </CardContent>
-    </Card>
-      <Box sx={{mt:15}}>
-  <Footer/>
-</Box>
-</>
+          <Divider sx={{ mb: 12, backgroundColor: "white" }} />
+
+          {user ? (
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={4} display="flex" alignItems="center">
+                <Avatar
+                  src={
+                    user?.profilePic
+                      ? `https://temple.signaturecutz.in/storege/userdp/${user.profilePic}`
+                      : ""
+                  }
+                  sx={{ width: 100, height: 100 }}
+                />
+                <IconButton sx={{ marginLeft: 2, color: "white" }}>
+                  <Edit />
+                </IconButton>
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Name"
+                  defaultValue={user.userName}
+                  {...textFieldProps}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  label="User ID"
+                  defaultValue={user.userId}
+                  {...textFieldProps}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  defaultValue={user.email}
+                  {...textFieldProps}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Phone"
+                  defaultValue={user.phoneNumber}
+                  {...textFieldProps}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="DOB"
+                  defaultValue={user.dob}
+                  {...textFieldProps}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Aadhar Number"
+                  defaultValue={user.aadharNumber}
+                  {...textFieldProps}
+                />
+              </Grid>
+
+              {/* <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Donate Number"
+                  defaultValue={user.donateNumber}
+                  {...textFieldProps}
+                />
+              </Grid> */}
+
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth sx={{ color: "white" }}>
+                  <InputLabel
+                    id="marriage-status-label"
+                    sx={{ color: "white" }}
+                  >
+                    Marriage Status
+                  </InputLabel>
+                  <Select
+                    labelId="marriage-status-label"
+                    id="marriage-status"
+                    value={marriageStatus}
+                    onChange={(e) => setMarriageStatus(e.target.value)}
+                    label="Marriage Status"
+                    sx={{
+                      color: "white",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "white",
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "white",
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "white",
+                      },
+                      "& .MuiSelect-icon": {
+                        color: "white",
+                      },
+                    }}
+                  >
+                    <MenuItem value="Single">Single</MenuItem>
+                    <MenuItem value="Married">Married</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Address"
+                  defaultValue={user.address || "Not Provided"}
+                  {...textFieldProps}
+                />
+              </Grid>
+
+              <Grid item xs={12} display="flex" justifyContent="flex-end">
+                <Button
+                  variant="outlined"
+                  sx={{ mr: 2, color: "white", borderColor: "white" }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{ mr: 2, backgroundColor: "white", color: "black" }}
+                >
+                  Save
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </Grid>
+            </Grid>
+          ) : (
+            <Typography align="center" sx={{ color: "white" }}>
+              Loading...
+            </Typography>
+          )}
+        </CardContent>
+      </Card>
+      <Box sx={{ mt: 15 }}>
+        <Footer />
+      </Box>
+    </>
   );
 };
 

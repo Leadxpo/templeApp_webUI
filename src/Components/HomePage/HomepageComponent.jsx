@@ -33,6 +33,10 @@ function HomepageComponent() {
     autoplaySpeed: 3000,
     slidesToShow: 1,
     slidesToScroll: 1,
+    centerMode: true,
+    centerPadding: '15%', // Adjust as needed (e.g., '10%', '20%')
+    pauseOnHover: true,
+    cssEase: 'ease-in-out',
   };
 
   const images = [Image1, Image2, Image3];
@@ -145,7 +149,7 @@ function HomepageComponent() {
       <div className="temple-homepage-container">
         <video autoPlay loop muted className="video-bg">
           <source src={TempleSignificance} type="video/mp4" />
-          Your browser does not support the video tag.
+       
         </video>
 
         <div className="video-overlay"></div>

@@ -1,5 +1,6 @@
-import { useNavigate, useLocation, Outlet } from "react-router-dom";
+import { useNavigate, useLocation, Outlet, Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+
 import {
   AppBar,
   Toolbar,
@@ -15,6 +16,8 @@ import {
   ListItemText,
   useMediaQuery,
 } from "@mui/material";
+import { Snackbar, Alert } from "@mui/material";
+
 import MenuIcon from "@mui/icons-material/Menu";
 import Logo from "../../Images/KotilingaTempleLogo1.png";
 
@@ -23,6 +26,8 @@ const Navbar = ({ isHomePage }) => {
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
   const isMobile = useMediaQuery("(max-width:768px)");
 
   useEffect(() => {
@@ -46,6 +51,14 @@ const Navbar = ({ isHomePage }) => {
   const handleNavigation = (path) => {
     navigate(path);
     setDrawerOpen(false);
+  };
+
+  const handleDonateClick = () => {
+    if (user) {
+      navigate("/donete");
+    } else {
+      setSnackbarOpen(true);
+    }
   };
 
   const navLinks = [
@@ -79,14 +92,23 @@ const Navbar = ({ isHomePage }) => {
           }}
         >
           {/* Logo + Title */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <img src={Logo} alt="Logo" style={{ height: "60px" }} />
-            {!isMobile && (
-              <Typography variant="h6">
-                Sri Shaktipeetha Koti Linga Kshethram
-              </Typography>
-            )}
-          </Box>
+          <Link to="/home" style={{ textDecoration: "none", color: "inherit" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                cursor: "pointer",
+              }}
+            >
+              <img src={Logo} alt="Logo" style={{ height: "60px" }} />
+              {!isMobile && (
+                <Typography variant="h6">
+                  Sri Shaktipeetha Koti Linga Kshethram
+                </Typography>
+              )}
+            </Box>
+          </Link>
 
           {/* Desktop Navigation */}
           {!isMobile ? (
@@ -195,7 +217,7 @@ const Navbar = ({ isHomePage }) => {
             <ListItem button onClick={handleProfileNavigate}>
               <ListItemText primary="Profile" />
             </ListItem>
-            <ListItem button onClick={() => navigate("/donete")}>
+            <ListItem button onClick={handleDonateClick}>
               <ListItemText primary="Donate" />
             </ListItem>
           </List>
@@ -213,6 +235,21 @@ const Navbar = ({ isHomePage }) => {
       >
         <Outlet />
       </Box>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity="warning"
+          sx={{ width: "100%" }}
+        >
+          Please login first to continue!
+        </Alert>
+      </Snackbar>
     </>
   );
 };

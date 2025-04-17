@@ -3,7 +3,8 @@ import Navbar from "../Components/NavbarComponent/Navbar";
 
 const Layout = () => {
   const location = useLocation();
-  const isHomePage = location.pathname === "/home";
+  const isHomePage = location.pathname === "/" || location.pathname === "/home";
+
 
   return (
     <>

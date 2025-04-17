@@ -38,7 +38,7 @@ function App() {
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="contact" element={<ContactPage />} />
-          <Route path="donete" element={<DonetePage />} />
+          <Route path="donete" element={<PrivateRoute><DonetePage /></PrivateRoute>} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
