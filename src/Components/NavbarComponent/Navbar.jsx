@@ -61,12 +61,17 @@ const Navbar = ({ isHomePage }) => {
     }
   };
 
-  const navLinks = [
+  const baseLinks = [
     { label: "Home", path: "/home" },
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
     { label: "Register", path: "/register" },
   ];
+  
+  const navLinks = user
+    ? baseLinks.filter((link) => link.label !== "Register")
+    : baseLinks;
+  
 
   return (
     <>

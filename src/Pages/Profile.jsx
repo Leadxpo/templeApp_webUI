@@ -15,42 +15,67 @@ import {
   InputLabel,
   Box,
 } from "@mui/material";
-import { Edit } from "@mui/icons-material";
+import { Edit, Girl } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Footer from "../Components/Footer/Footer";
 import axios from "axios";
-
+import lingam from "../Images/lingam.png";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  const [marriageStatus, setMarriageStatus] = useState("");
-  const [donations, setDonations] = useState([]);
-
+  const [donation, setDonation] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("userData");
-    if (storedUser) {
+    const token = localStorage.getItem("token");
+
+    if (storedUser && token) {
       const parsedUser = JSON.parse(storedUser);
+      console.log("User from localStorage:", parsedUser);
+
       setUser(parsedUser);
-      setMarriageStatus(parsedUser.marriageStatus || "");
+
+      const donateNumber = parsedUser?.donateNumber;
+      if (donateNumber) {
+        console.log("📦 Found donateNumber:", donateNumber);
+        fetchDonationDetails(donateNumber);
+      } else {
+        console.warn("⚠️ No donateNumber found in user data");
+      }
+    } else {
+      console.warn("❌ Missing user or token");
     }
   }, []);
 
-  useEffect(() => {
-    if (user?.userId) {
-      axios
-        .get("https://localhost:3001/user/api/donations")
-        .then((res) => {
-          setDonations(res.data);
-        })
-        .catch((err) => {
-          console.error("Error fetching donation data:", err);
-        });
+  const fetchDonationDetails = async (donateNumber) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:5000/donate/api/get-by-donate-number",
+        { donateNumber },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("🎉 Donation API Response:", response.data);
+
+      if (response.data.success && response.data.data) {
+        setDonation(response.data.data);
+      } else {
+        console.error("❌ Donation fetch failed:", response.data.message);
+      }
+    } catch (error) {
+      console.error(
+        "🔥 Donation fetch error:",
+        error.response?.data || error.message
+      );
     }
-  }, [user]);
-  
+  };
 
   const inputStyles = {
     color: "white",
@@ -182,8 +207,8 @@ const Profile = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Married Status"
-                  defaultValue={user.marriage_status || "Not Provided"}
+                  label="marriage status"
+                  defaultValue={user.marriage_status ?? "Not Provided"}
                   {...textFieldProps}
                 />
               </Grid>
@@ -227,32 +252,97 @@ const Profile = () => {
         </CardContent>
       </Card>
 
+      <Box sx={{ mt: 5, color: "white", textAlign:"center" }}>
+        <Typography variant="h6" gutterBottom>
+          Donation Details
+        </Typography>
+        <Divider sx={{ backgroundColor: "white", mb: 2 }} />
 
-      <Box sx={{ mt: 5, color: "white" }}>
-  <Typography variant="h6" gutterBottom>Donation Details</Typography>
-  <Divider sx={{ backgroundColor: "white", mb: 2 }} />
+        {donation ? (
+          <Box
+            sx={{
+              backgroundColor: "#161b22",
+              p: 3,
+              borderRadius: 2,
+              boxShadow: 3,
+            }}
+          >
+          <Box
+  sx={{
+    backgroundColor: "#161b22",
+    p: 3,
+    borderRadius: 2,
+    boxShadow: 3,
+  }}
+>
+  {/* <Typography variant="h6" gutterBottom>
+    Donation Information
+  </Typography> */}
 
-  {donations.length > 0 ? (
-    donations.map((donation, index) => (
-      <Card
-        key={index}
-        sx={{
-          backgroundColor: "#161b22",
-          mb: 2,
-          padding: 2,
-          border: "1px solid white",
-        }}
-      >
-        <Typography>Amount: ₹{donation.amount}</Typography>
-        <Typography>Date: {new Date(donation.date).toLocaleDateString()}</Typography>
-        <Typography>Mode: {donation.mode}</Typography>
-        <Typography>Remark: {donation.remark}</Typography>
-      </Card>
-    ))
-  ) : (
-    <Typography>No donation records found.</Typography>
-  )}
+  <Grid container spacing={3}> {/* Added more spacing */}
+    {/* First Column: Image */}
+    <Grid item xs={12} md={3} sx={{ display: "flex", justifyContent: "center" }}>
+      <img src={lingam} alt="Available" width="100%" height="auto" />
+    </Grid>
+
+    {/* Second Column: Donation Number, Phone, Gothram */}
+    <Grid item xs={12} md={3}>
+      <Typography variant="body1" sx={{ marginBottom: 2 }}>
+        <strong>Donation Number:</strong> {donation.donateNumber}
+      </Typography>
+      <Typography variant="body1" sx={{ marginBottom: 2 }}>
+        <strong>Phone:</strong> {donation.phoneNumber}
+      </Typography>
+      <Typography variant="body1" sx={{ marginBottom: 2 }}>
+        <strong>Gothram:</strong> {donation.gothram}
+      </Typography>
+    </Grid>
+
+    {/* Third Column: Name, Date of Birth, Relation */}
+    <Grid item xs={12} md={3}>
+      <Typography variant="body1" sx={{ marginBottom: 2 }}>
+        <strong>Name:</strong> {donation.userName}
+      </Typography>
+      <Typography variant="body1" sx={{ marginBottom: 2 }}>
+        <strong>Date of Birth:</strong>{" "}
+        {new Date(donation.dob).toLocaleDateString()}
+      </Typography>
+      <Typography variant="body1" sx={{ marginBottom: 2 }}>
+        <strong>Relation:</strong> {donation.relation}
+      </Typography>
+    </Grid>
+
+    {/* Fourth Column: Status Button */}
+    <Grid item xs={12} md={3} sx={{ display: "flex", justifyContent: "center" }}>  
+    <Button
+  variant="contained"
+  size="small"
+  sx={{
+    backgroundColor: "#FFEB3B",
+    color: "#000",
+    fontWeight: "bold",
+    textTransform: "none",
+    padding: "2px 10px",     // Reduced vertical padding
+    height: "30px",          // Custom height
+    minWidth: "auto",
+    fontSize: "0.75rem",     // Optional: smaller text
+    "&:hover": {
+      backgroundColor: "#fdd835",
+    },
+  }}
+>
+  {donation.status}
+</Button>
+
+
+    </Grid>
+  </Grid>
 </Box>
+          </Box>
+        ) : (
+          <Typography>Loading donation info...</Typography>
+        )}
+      </Box>
 
       <Box sx={{ mt: 15 }}>
         <Footer />

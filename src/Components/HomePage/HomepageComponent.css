@@ -730,7 +730,7 @@
   }
 
   .transparent-container {
-    height: auto;
+    /* height: auto; */
     padding: 2rem;
     text-align: center;
   }

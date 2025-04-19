@@ -69,7 +69,8 @@ const HistorySection = () => {
                 color: '#d1d5db',
                 fontSize: '1.1rem',
                 lineHeight: 1.8,
-                maxWidth: '95%',
+                maxWidth: '100%',
+                textAlign:"justify"
               }}
             >
               At Sri Shaktipeetha Koti Linga Kshethram, we believe in fostering a deep spiritual
