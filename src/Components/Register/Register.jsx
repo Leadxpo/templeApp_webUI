@@ -68,7 +68,7 @@ const RegisterForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/user/api/register",
+        "https://temple.signaturecutz.in/user/api/register",
         data,
         {
           headers: {

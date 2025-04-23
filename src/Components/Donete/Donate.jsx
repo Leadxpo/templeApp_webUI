@@ -6,6 +6,8 @@ import lingamvideo from "../../Images/lingamvideo.gif";
 
 import PhonePayImage from "../../Images/phnoepay.jpg";
 import axios from "axios";
+import { Alert } from "@mui/material";
+
 
 import {
   Box,
@@ -44,6 +46,7 @@ const RegisterBanner = () => {
   const [showPaymentImage, setShowPaymentImage] = useState(false);
 
   const [successMessage, setSuccessMessage] = useState(""); // To show success message
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [user, setUser] = useState(null);
 
@@ -91,7 +94,7 @@ const RegisterBanner = () => {
   
     try {
       const response = await axios.post(
-        "http://localhost:5000/payments/api/create-payment",
+        "https://temple.signaturecutz.in/payments/api/create-payment",
         formDataToSend,
         {
           headers: {
@@ -103,6 +106,9 @@ const RegisterBanner = () => {
   
       if (response.status === 200) {
         setSuccessMessage("Payment successfully processed! Thank you for your support.");
+        setTimeout(() => {
+          setShowPaymentImage(false);
+      }, 3000)
   
         const donateData = {
           donateNumber: inputNumber,
@@ -115,7 +121,7 @@ const RegisterBanner = () => {
         };
   
         const donateResponse = await axios.post(
-          "http://localhost:5000/donate/api/create-donate-number",
+          "https://temple.signaturecutz.in/donate/api/create-donate-number",
           donateData,
           {
             headers: {
@@ -134,7 +140,7 @@ const RegisterBanner = () => {
           updateFormData.append("donateNumber", inputNumber);
   
           const updateResponse = await axios.patch(
-            "http://localhost:5000/user/api/user-update",
+            "https://temple.signaturecutz.in/user/api/user-update",
             updateFormData,
             {
               headers: {
@@ -315,7 +321,7 @@ const RegisterBanner = () => {
                 }
 
                 const response = await axios.post(
-                  "http://localhost:5000/donate/api/check-number",
+                  "https://temple.signaturecutz.in/donate/api/check-number",
                   { number: parseInt(inputNumber) },
                   {
                     headers: {
@@ -636,6 +642,18 @@ const RegisterBanner = () => {
             >
               Submit
             </Button>
+            {errorMessage && (
+  <Alert severity="error" sx={{ mt: 2 }}>
+    {errorMessage}
+  </Alert>
+)}
+
+{successMessage && (
+  <Alert severity="success" sx={{ mt: 2 }}>
+    {successMessage}
+  </Alert>
+)}
+
           </Stack>
         </DialogContent>
       </Dialog>
