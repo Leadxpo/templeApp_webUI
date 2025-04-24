@@ -11,18 +11,18 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import LogoImage from '../../Images/KotilingaTempleLogo1.png';
 
-
 const Footer = () => {
   return (
     <Box
       sx={{
-        backgroundColor: 'black',
-        color: '#fff',
+        color: 'white',
         py: 4,
         px: 3,
         textAlign: 'center',
+        background: 'black', // solid black background
       }}
     >
+      {/* Content */}
       <Box
         sx={{
           display: 'flex',
@@ -34,17 +34,17 @@ const Footer = () => {
           mb: 2,
         }}
       >
-        {/* Left - Logo */}
+        {/* Logo */}
         <Box sx={{ mb: { xs: 2, md: 0 } }}>
           <img
-            src={LogoImage} // Replace with your logo path
+            src={LogoImage}
             alt="Logo"
             style={{ height: 80 }}
           />
         </Box>
 
-        {/* Center - Navigation Links */}
-        <Stack
+        {/* Navigation Links */}
+        <Stack style={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}
           direction="row"
           spacing={4}
           sx={{ mb: { xs: 2, md: 0 }, flexWrap: 'wrap' }}
@@ -66,26 +66,40 @@ const Footer = () => {
           ))}
         </Stack>
 
-        {/* Right - Social Icons */}
+        {/* Social Icons */}
         <Stack direction="row" spacing={2}>
-  <IconButton href="https://facebook.com" target="_blank" sx={{ color: 'white' }}>
-    <FacebookIcon fontSize="large" />
-  </IconButton>
-  <IconButton href="https://instagram.com" target="_blank" sx={{ color: 'white' }}>
-    <InstagramIcon fontSize="large" />
-  </IconButton>
-  <IconButton href="https://youtube.com" target="_blank" sx={{ color: 'white' }}>
-    <YouTubeIcon fontSize="large" />
-  </IconButton>
-</Stack>
+          <IconButton href="https://facebook.com" target="_blank" sx={{ color: 'white' }}>
+            <FacebookIcon fontSize="large" />
+          </IconButton>
+          <IconButton href="https://instagram.com" target="_blank" sx={{ color: 'white' }}>
+            <InstagramIcon fontSize="large" />
+          </IconButton>
+          <IconButton href="https://youtube.com" target="_blank" sx={{ color: 'white' }}>
+            <YouTubeIcon fontSize="large" />
+          </IconButton>
+        </Stack>
       </Box>
 
-      {/* Bottom Text */}
-      <Typography variant="body2" sx={{ fontSize: '1.1rem', mt:10 }}>
-        Copyright © 2025 SRI SHAKTIPEETHA KOTI LINGA KSHETHRAM | Designed by
-        <Typography component="span" sx={{ color: '#90EE90', ml: 1, fontWeight: 600 }}>
-          LEADXPO IT SOLUTIONS
-        </Typography>
+      {/* Footer Text */}
+      <Typography
+        variant="body2"
+        sx={{ fontSize: '1.1rem', mt: 4 }}
+      >
+        Copyright © 2025 SRI SHAKTIPEETHA KOTI LINGA KSHETHRAM |
+        Designed by{' '}
+        <Link
+          href="https://leadxpo.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          underline="none"
+        >
+          <Typography
+            component="span"
+            sx={{ color: '#90EE90', ml: 1, fontWeight: 600, cursor: 'pointer' }}
+          >
+            LEADXPO IT SOLUTIONS
+          </Typography>
+        </Link>
       </Typography>
     </Box>
   );

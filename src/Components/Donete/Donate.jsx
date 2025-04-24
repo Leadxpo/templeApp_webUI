@@ -7,6 +7,8 @@ import lingamvideo from "../../Images/lingamvideo.gif";
 import PhonePayImage from "../../Images/phnoepay.jpg";
 import axios from "axios";
 import { Alert } from "@mui/material";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 
 import {
@@ -30,15 +32,25 @@ import lingam from "../../Images/lingam.png";
 const RegisterBanner = () => {
   const [openModal1, setOpenModal1] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);
-  const [donationAmount, setDonationAmount] = useState("");
+  // const [donationAmount, setDonationAmount] = useState("");
   const [inputNumber, setInputNumber] = useState();
   const [isNumberValid, setIsNumberValid] = useState(null); // null, true, false
   const [file, setFile] = useState(null);
+  const [filePreview, setFilePreview] = useState(null);
+  const [donationAmount, setDonationAmount] = useState(5000);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+const [snackbarMessage, setSnackbarMessage] = useState('');
+
+
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+  
 
   const [formData, setFormData] = useState({
-    UserName: "",
+    userName: "",
     phoneNumber: "",
-    relation: "",
     dob: "",
     gothram: "",
   });
@@ -47,6 +59,7 @@ const RegisterBanner = () => {
 
   const [successMessage, setSuccessMessage] = useState(""); // To show success message
   const [errorMessage, setErrorMessage] = useState("");
+  const [hasDonationNumber, setHasDonationNumber] = useState(false);
 
   const [user, setUser] = useState(null);
 
@@ -54,14 +67,23 @@ const RegisterBanner = () => {
   const userId = storedUser?.userId;
   console.log("userId,,.........", userId);
 
-  const token = localStorage.getItem("token"); 
+  const token = localStorage.getItem("token");
   console.log("token2222", token);
 
   // form
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("userData"));
     if (storedUser) {
-      setUser(storedUser);
+      setFormData((prev) => ({
+        ...prev,
+        userName: storedUser.userName || "",
+        phoneNumber: storedUser.phoneNumber || "",
+        gothram: storedUser.gothram || "",
+        dob: storedUser.dob || "",
+      }));
+      if (storedUser.donateNumber) {
+        setHasDonationNumber(true);
+      }
     }
   }, []);
 
@@ -69,12 +91,12 @@ const RegisterBanner = () => {
     e.preventDefault();
   
     if (!token) {
-      alert("User not authenticated. Please log in again.");
+      alert("User  not authenticated. Please log in again.");
       return;
     }
   
-    if (!user || !user.userId) {
-      alert("User not found. Please log in again.");
+    if (!storedUser  || !storedUser .userId) {
+      alert("User  not found. Please log in again.");
       return;
     }
   
@@ -84,17 +106,17 @@ const RegisterBanner = () => {
     }
   
     const formDataToSend = new FormData();
-    formDataToSend.append("userId", user.userId);
-    formDataToSend.append("userName", formData.UserName);
+    formDataToSend.append("userId", storedUser .userId);
+    formDataToSend.append("userName", formData.userName);
     formDataToSend.append("gothram", formData.gothram);
     formDataToSend.append("donateNumber", inputNumber);
-    formDataToSend.append("amount", "100");
+    formDataToSend.append("amount", "5000");
     formDataToSend.append("paymentMethod", "QR Code");
     formDataToSend.append("paymentRecept", file);
   
     try {
       const response = await axios.post(
-        "https://temple.signaturecutz.in/payments/api/create-payment",
+        "http://localhost:5000/payments/api/create-payment",
         formDataToSend,
         {
           headers: {
@@ -104,58 +126,75 @@ const RegisterBanner = () => {
         }
       );
   
-      if (response.status === 200) {
-        setSuccessMessage("Payment successfully processed! Thank you for your support.");
+      console.log("Response from payment API:", response.data);
+      if (response.status === 200 && response.data.success) {
+        setSnackbarMessage("Payment successfully processed! Thank you for your support.");
+        setOpenSnackbar(true);
         setTimeout(() => {
           setShowPaymentImage(false);
-      }, 3000)
+        }, 3000);
   
-        const donateData = {
-          donateNumber: inputNumber,
-          userName: formData.UserName,
-          userId: user.userId,
-          phoneNumber: formData.phoneNumber,
-          gothram: formData.gothram,
-          dob: formData.dob,
-          relation: formData.relation,
-        };
+        // Check if the user already has a donation number
+        if (!storedUser .donateNumber) {
+          const donateData = {
+            donateNumber: inputNumber,
+            userName: formData.userName,
+            userId: storedUser .userId,
+            phoneNumber: formData.phoneNumber,
+            gothram: formData.gothram,
+            dob: formData.dob,
+          };
   
-        const donateResponse = await axios.post(
-          "https://temple.signaturecutz.in/donate/api/create-donate-number",
-          donateData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-  
-        if (donateResponse.status === 200) {
-          console.log("Donate number recorded successfully");
-  
-          // ✅ Update user with donate number
-          const updateFormData = new FormData();
-          updateFormData.append("userId", user.userId);
-          updateFormData.append("donateNumber", inputNumber);
-  
-          const updateResponse = await axios.patch(
-            "https://temple.signaturecutz.in/user/api/user-update",
-            updateFormData,
+          const donateResponse = await axios.post(
+            "http://localhost:5000/donate/api/create-donate-number",
+            donateData,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
-                "Content-Type": "multipart/form-data",
+                "Content-Type": "application/json",
               },
             }
           );
   
-          if (updateResponse.status === 200) {
-            console.log("User updated with donate number successfully");
-            const updatedUser = { ...user, inputNumber };
-            localStorage.setItem("userData", JSON.stringify(updatedUser));
-            setUser(updatedUser); // update UI if needed
+          if (donateResponse.status === 200) {
+            console.log("Donate number recorded successfully");
+  
+            // Store donate number separately in local storage
+            console.log("Storing donate number in local storage:", inputNumber);
+            localStorage.setItem("donateNumber", inputNumber);
+  
+            // Verify if it was stored correctly
+            const storedDonateNumber = localStorage.getItem("donateNumber");
+            console.log(
+              "Retrieved donate number from local storage:",
+              storedDonateNumber
+            );
+  
+            // ✅ Update user with donate number
+            const updatedUser  = { ...storedUser , donateNumber: inputNumber }; // Update the user object
+            const updateFormData = new FormData();
+            updateFormData.append("id", storedUser .id);
+            updateFormData.append("donateNumber", inputNumber);
+  
+            const updateResponse = await axios.patch(
+              "http://localhost:5000/user/api/user-update",
+              updateFormData,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "multipart/form-data",
+                },
+              }
+            );
+  
+            if (updateResponse.status === 200) {
+              console.log("User  updated with donate number successfully");
+              localStorage.setItem("userData", JSON.stringify(updatedUser )); // Update local storage
+              setUser (updatedUser ); // Update UI if needed
+            }
           }
+        } else {
+          console.log("User  already has a donation number. Skipping creation.");
         }
       }
     } catch (error) {
@@ -163,8 +202,6 @@ const RegisterBanner = () => {
       alert("There was an issue with the payment. Please try again.");
     }
   };
-  
-  
 
   const handleModal1Open = () => setOpenModal1(true);
   const handleModal1Close = () => setOpenModal1(false);
@@ -260,9 +297,38 @@ const RegisterBanner = () => {
           src={DoneteImage}
           alt="Donate"
           style={{ width: "100%", height: "50%" }}
-          onClick={handleModal1Open}
         />
       </Box>
+
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <Button
+  variant="contained"
+  onClick={handleModal1Open}
+  disabled={hasDonationNumber}
+  sx={{
+    mt: 2,
+    bgcolor: hasDonationNumber ? "red" : "primary.main",
+    color: "white",
+    "&:hover": {
+      bgcolor: hasDonationNumber ? "darkred" : "primary.dark",
+    },
+    "&.Mui-disabled": {
+      bgcolor: "red",
+      color: "white",
+    },
+  }}
+>
+  {hasDonationNumber ? "Already Donated" : "Donate now"}
+</Button>
+
+</Box>
+
+
+      {/* {hasDonationNumber && (
+        <Typography sx={{ color: "red", textAlign: "center", mt: 2 }}>
+          You have already booked a donation number. You cannot book again.
+        </Typography>
+      )} */}
 
       {/* ✅ Show number status outside the modal */}
       {inputNumber && (
@@ -305,11 +371,22 @@ const RegisterBanner = () => {
         <DialogContent>
           <TextField
             label="Enter Number"
-            type="number"
+            type="text" // <- important change!
             value={inputNumber}
-            onChange={(e) => setInputNumber(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              // Allow only positive numbers (no leading zero unless "0")
+              if (value === "" || /^[1-9]\d*$/.test(value)) {
+                setInputNumber(value);
+              }
+            }}
             fullWidth
+            inputProps={{
+              inputMode: "numeric",
+              pattern: "[1-9][0-9]*",
+            }}
           />
+
           <Button
             variant="outlined"
             onClick={async () => {
@@ -321,7 +398,7 @@ const RegisterBanner = () => {
                 }
 
                 const response = await axios.post(
-                  "https://temple.signaturecutz.in/donate/api/check-number",
+                  "http://localhost:5000/donate/api/check-number",
                   { number: parseInt(inputNumber) },
                   {
                     headers: {
@@ -493,41 +570,33 @@ const RegisterBanner = () => {
               />
               <TextField
                 label="Name"
-                value={formData.UserName}
-                onChange={(e) =>
-                  setFormData({ ...formData, UserName: e.target.value })
-                }
+                value={formData.userName}
                 fullWidth
                 required
+                disabled
               />
               <TextField
                 label="Phone"
                 value={formData.phoneNumber}
-                onChange={(e) =>
-                  setFormData({ ...formData, phoneNumber: e.target.value })
-                }
+                // onChange={(e) =>
+                //   setFormData({ ...formData, phoneNumber: e.target.value })
+                // }
                 fullWidth
                 required
+                disabled
               />
-              <TextField
-                label="Relation"
-                value={formData.relation}
-                onChange={(e) =>
-                  setFormData({ ...formData, relation: e.target.value })
-                }
-                fullWidth
-                required
-              />
+
               <TextField
                 label="DOB"
                 type="date"
                 InputLabelProps={{ shrink: true }}
                 value={formData.dob}
-                onChange={(e) =>
-                  setFormData({ ...formData, dob: e.target.value })
-                }
+                // onChange={(e) =>
+                //   setFormData({ ...formData, dob: e.target.value })
+                // }
                 fullWidth
                 required
+                disabled
               />
 
               <TextField
@@ -535,11 +604,12 @@ const RegisterBanner = () => {
                 type="text"
                 InputLabelProps={{ shrink: true }}
                 value={formData.gothram}
-                onChange={(e) =>
-                  setFormData({ ...formData, gothram: e.target.value })
-                }
+                // onChange={(e) =>
+                //   setFormData({ ...formData, gothram: e.target.value })
+                // }
                 fullWidth
                 required
+                disabled
               />
               <Button
                 variant="contained"
@@ -547,9 +617,8 @@ const RegisterBanner = () => {
                 onClick={() => {
                   // Simple form validation
                   if (
-                    !formData.UserName ||
+                    !formData.userName ||
                     !formData.phoneNumber ||
-                    !formData.relation ||
                     !formData.dob ||
                     !formData.gothram
                   ) {
@@ -599,6 +668,9 @@ const RegisterBanner = () => {
               alt="Payment"
               style={{ width: "70%", marginTop: "1rem" }}
             />
+            <Typography variant="h6" sx={{ mt: 2 }} style={{fontFamily:"fantasy"}}>
+              Amount: ₹{donationAmount}
+            </Typography>
 
             {/* Hidden file input */}
             <input
@@ -607,12 +679,35 @@ const RegisterBanner = () => {
               onChange={(e) => {
                 const selectedFile = e.target.files[0];
                 if (selectedFile) {
-                  setFile(selectedFile); // ⬅️ Save to state
+                  setFile(selectedFile); // Save to state
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setFilePreview(reader.result); // Set the preview URL
+                  };
+                  reader.readAsDataURL(selectedFile); // Read the file as a data URL
                 }
               }}
               style={{ display: "none" }}
               id="file-upload"
             />
+
+            {filePreview && (
+              <Box sx={{ marginTop: "10px", textAlign: "center" }}>
+                {file.type.startsWith("image/") ? (
+                  <img
+                    src={filePreview}
+                    alt="Payment Preview"
+                    style={{ maxWidth: "100%", maxHeight: "300px" }}
+                  />
+                ) : file.type === "application/pdf" ? (
+                  <iframe
+                    src={filePreview}
+                    title="Payment PDF Preview"
+                    style={{ width: "100%", height: "300px" }}
+                  />
+                ) : null}
+              </Box>
+            )}
 
             {/* Visible label button to trigger file input */}
             <label htmlFor="file-upload">
@@ -643,17 +738,16 @@ const RegisterBanner = () => {
               Submit
             </Button>
             {errorMessage && (
-  <Alert severity="error" sx={{ mt: 2 }}>
-    {errorMessage}
-  </Alert>
-)}
+              <Alert severity="error" sx={{ mt: 2 }}>
+                {errorMessage}
+              </Alert>
+            )}
 
-{successMessage && (
-  <Alert severity="success" sx={{ mt: 2 }}>
-    {successMessage}
-  </Alert>
-)}
-
+            {successMessage && (
+              <Alert severity="success" sx={{ mt: 2 }}>
+                {successMessage}
+              </Alert>
+            )}
           </Stack>
         </DialogContent>
       </Dialog>
@@ -705,6 +799,17 @@ const RegisterBanner = () => {
               </Link>
             ))}
           </Stack>
+          <Snackbar
+  open={openSnackbar}
+  autoHideDuration={6000}
+  onClose={() => setOpenSnackbar(false)}
+  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+>
+  <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
+    {snackbarMessage}
+  </Alert>
+</Snackbar>
+
 
           <Stack direction="row" spacing={2}>
             <IconButton

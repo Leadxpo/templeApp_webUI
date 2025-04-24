@@ -4,6 +4,7 @@ import { BsFire } from "react-icons/bs";
 import { HiMoon } from "react-icons/hi";
 import { FaFire } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import waterpour from "../../videos/waterpour.mp4";
 
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -34,9 +35,9 @@ function HomepageComponent() {
     slidesToShow: 1,
     slidesToScroll: 1,
     centerMode: true,
-    centerPadding: '15%', // Adjust as needed (e.g., '10%', '20%')
+    centerPadding: "15%", // Adjust as needed (e.g., '10%', '20%')
     pauseOnHover: true,
-    cssEase: 'ease-in-out',
+    cssEase: "ease-in-out",
   };
 
   const images = [Image1, Image2, Image3];
@@ -116,7 +117,7 @@ function HomepageComponent() {
           <div className="about-section about-section-sub-container">
             <p className="highlight">About</p>
             <h2>Experience the Eternal Blessings!</h2>
-            <p>
+            <p style={{textAlign: "justify",lineHeight: "1.5"}}>
               At Sri Shaktipeetha Koti Linga Kshethram, we believe in fostering
               a deep spiritual connection with Lord Shiva through ancient
               rituals, Vedic practices, and devotional services. Our temple is
@@ -149,7 +150,6 @@ function HomepageComponent() {
       <div className="temple-homepage-container">
         <video autoPlay loop muted className="video-bg">
           <source src={TempleSignificance} type="video/mp4" />
-       
         </video>
 
         <div className="video-overlay"></div>
@@ -185,6 +185,55 @@ function HomepageComponent() {
       </div>
 
       <WhyUsSection />
+
+      <div
+        style={{ position: "relative", height: "100vh", overflow: "hidden" }}
+      >
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: 0,
+          }}
+        >
+          <source src={waterpour} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+
+        {/* Overlay Text */}
+        <div
+          style={{
+            position: "relative",
+            zIndex: 1,
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "white",
+            textAlign: "center",
+            padding: "0 20px",
+            // backgroundColor: "rgba(0, 0, 0, 0.4)", 
+          }}
+        >
+          <h1 style={{ fontSize: "3rem", marginBottom: "1rem" }}>
+            Welcome to Our Temple
+          </h1>
+          <p style={{ fontSize: "1.5rem" }}>
+            Experience the spiritual aura with us
+          </p>
+        </div>
+      </div>
+
       <Footer />
     </div>
   );

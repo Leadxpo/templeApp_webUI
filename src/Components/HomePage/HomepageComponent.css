@@ -1,6 +1,6 @@
 /* Global container with fixed background image */
 .main-container {
-  background-image: url("https://res.cloudinary.com/dabzdwxet/image/upload/v1744276615/thrishul-background_tnazvz.jpg");
+  background-image: url("https://res.cloudinary.com/dabzdwxet/image/upload/v1744276615/thrishul-background_tnazvz.jpg") !important;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -680,9 +680,9 @@
   }
 
   .video-subtitle {
-    width: 90%;
-    text-align: center;
-    font-size: 16px;
+    /* width: 90%; */
+    text-align: start;
+    font-size: 15px;
   }
 
   .donate-button {
@@ -831,6 +831,7 @@
     font-size: 15px;
   }
 }
+
 
 
 
