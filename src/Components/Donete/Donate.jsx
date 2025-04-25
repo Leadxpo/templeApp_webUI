@@ -109,6 +109,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
     formDataToSend.append("userId", storedUser .userId);
     formDataToSend.append("userName", formData.userName);
     formDataToSend.append("gothram", formData.gothram);
+    formDataToSend.append("phoneNumber", formData.phoneNumber);
     formDataToSend.append("donateNumber", inputNumber);
     formDataToSend.append("amount", "5000");
     formDataToSend.append("paymentMethod", "QR Code");
