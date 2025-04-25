@@ -149,9 +149,10 @@ const RegisterForm = () => {
             borderRadius: 3,
             boxShadow: 3,
             color: "white",
-            maxWidth: 600,
+            // maxWidth: 600,
             backgroundSize: "cover",
             backgroundPosition: "center",
+            padding: "20px 7px",
 
             width: "100%",
           }}
