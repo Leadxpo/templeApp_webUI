@@ -197,7 +197,7 @@ const Profile = () => {
 
     try {
       const response = await axios.patch(
-        "https://temple.signaturecutz.in/user/api/user-update",
+        "https://temple.signaturecutz.in/user/user-update",
         data,
         {
           headers: {

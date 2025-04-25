@@ -177,7 +177,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
             updateFormData.append("donateNumber", inputNumber);
   
             const updateResponse = await axios.patch(
-              "https://temple.signaturecutz.in/user/api/user-update",
+              "https://temple.signaturecutz.in/user/user-update",
               updateFormData,
               {
                 headers: {

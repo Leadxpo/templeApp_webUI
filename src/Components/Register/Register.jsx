@@ -84,7 +84,7 @@ const RegisterForm = () => {
     }
 
     try {
-      await axios.post("https://temple.signaturecutz.in/user/api/register", data, {
+      await axios.post("https://temple.signaturecutz.in/user/register", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -149,7 +149,7 @@ const RegisterForm = () => {
             borderRadius: 3,
             boxShadow: 3,
             color: "white",
-            // maxWidth: 600,
+            maxWidth: 600,
             backgroundSize: "cover",
             backgroundPosition: "center",
             padding: "20px 7px",
