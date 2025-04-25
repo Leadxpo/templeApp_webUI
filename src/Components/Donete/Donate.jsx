@@ -116,7 +116,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
   
     try {
       const response = await axios.post(
-        "http://localhost:5000/payments/api/create-payment",
+        "https://temple.signaturecutz.in/payments/api/create-payment",
         formDataToSend,
         {
           headers: {
@@ -146,7 +146,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
           };
   
           const donateResponse = await axios.post(
-            "http://localhost:5000/donate/api/create-donate-number",
+            "https://temple.signaturecutz.in/donate/api/create-donate-number",
             donateData,
             {
               headers: {
@@ -177,7 +177,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
             updateFormData.append("donateNumber", inputNumber);
   
             const updateResponse = await axios.patch(
-              "http://localhost:5000/user/api/user-update",
+              "https://temple.signaturecutz.in/user/api/user-update",
               updateFormData,
               {
                 headers: {
@@ -398,7 +398,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
                 }
 
                 const response = await axios.post(
-                  "http://localhost:5000/donate/api/check-number",
+                  "https://temple.signaturecutz.in/donate/api/check-number",
                   { number: parseInt(inputNumber) },
                   {
                     headers: {

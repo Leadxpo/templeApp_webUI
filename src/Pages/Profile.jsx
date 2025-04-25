@@ -110,7 +110,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:5000/donate/api/get-by-donate-number",
+        "https://temple.signaturecutz.in/donate/api/get-by-donate-number",
         { donateNumber },
         {
           headers: {
@@ -197,7 +197,7 @@ const Profile = () => {
 
     try {
       const response = await axios.patch(
-        "http://localhost:5000/user/api/user-update",
+        "https://temple.signaturecutz.in/user/api/user-update",
         data,
         {
           headers: {
@@ -247,7 +247,7 @@ const Profile = () => {
               <Grid item xs={12} sm={4} display="flex" alignItems="center">
                 <Box sx={{ position: "relative", display: "inline-block" }}>
                 <Avatar
-  src={profilePic ? URL.createObjectURL(profilePic) : (user?.profilePic ? `http://localhost:5000/storege/userdp/${user.profilePic}` : "")}
+  src={profilePic ? URL.createObjectURL(profilePic) : (user?.profilePic ? `https://temple.signaturecutz.in/storege/userdp/${user.profilePic}` : "")}
   sx={{ width: 100, height: 100 }}
 />
 

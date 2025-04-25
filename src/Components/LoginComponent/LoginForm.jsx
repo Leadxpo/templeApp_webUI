@@ -29,7 +29,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/user/api/login", formData);
+      const response = await axios.post("https://temple.signaturecutz.in/user/api/login", formData);
       const { token, user } = response.data.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userData", JSON.stringify(user));
