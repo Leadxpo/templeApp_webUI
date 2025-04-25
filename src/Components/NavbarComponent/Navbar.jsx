@@ -154,7 +154,7 @@ const Navbar = ({ isHomePage }) => {
                     <Avatar
                     src={
                       user?.profilePic
-                        ? `https://temple.signaturecutz.in/storege/userdp/${user.profilePic}`
+                        ? `https://templeservice.signaturecutz.in/storege/userdp/${user.profilePic}`
                         : ""
                     }
                     sx={{ width: 40, height: 40 }}

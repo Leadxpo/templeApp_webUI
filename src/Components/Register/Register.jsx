@@ -84,7 +84,7 @@ const RegisterForm = () => {
     }
 
     try {
-      await axios.post("https://temple.signaturecutz.in/user/register", data, {
+      await axios.post("https://templeservice.signaturecutz.in/user/register", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
