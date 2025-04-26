@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -10,8 +10,35 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import LogoImage from '../../Images/KotilingaTempleLogo1.png';
+import { useNavigate } from 'react-router-dom';
 
 const Footer = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('userData');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+  
+  const Navigate = useNavigate();
+
+  // Base links with Login and Register
+  const baseLinks = ['Home', 'About', 'Contact', 'Register', 'Login'];
+
+  // Filter links based on user login state
+  const filteredLinks = user
+    ? baseLinks.filter(link => link !== 'Login' && link !== 'Register') // Remove "Login" and "Register" if logged in
+    : baseLinks;
+
+  const handleLogout = () => {
+    localStorage.removeItem('userData');
+    setUser(null);
+    Navigate("/login")
+    window.location.reload(); // Force reload page after logout
+  };
+
   return (
     <Box
       sx={{
@@ -19,10 +46,9 @@ const Footer = () => {
         py: 4,
         px: 3,
         textAlign: 'center',
-        background: 'black', // solid black background
+        background: 'black',
       }}
     >
-      {/* Content */}
       <Box
         sx={{
           display: 'flex',
@@ -36,20 +62,16 @@ const Footer = () => {
       >
         {/* Logo */}
         <Box sx={{ mb: { xs: 2, md: 0 } }}>
-          <img
-            src={LogoImage}
-            alt="Logo"
-            style={{ height: 80 }}
-          />
+          <img src={LogoImage} alt="Logo" style={{ height: 80 }} />
         </Box>
 
         {/* Navigation Links */}
-        <Stack style={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}
+        <Stack
           direction="row"
           spacing={4}
-          sx={{ mb: { xs: 2, md: 0 }, flexWrap: 'wrap' }}
+          sx={{ mb: { xs: 2, md: 0 }, flexWrap: 'wrap', justifyContent: 'center' }}
         >
-          {['Home', 'About', 'Contact', 'Register', 'Login'].map((item) => (
+          {filteredLinks.map((item) => (
             <Link
               key={item}
               href={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
@@ -64,6 +86,23 @@ const Footer = () => {
               {item}
             </Link>
           ))}
+
+          {/* Logout Button if user is logged in */}
+          {user && (
+            <Link
+              onClick={handleLogout}
+              underline="none"
+              sx={{
+                color: 'white',
+                fontSize: '1.3rem',
+                fontWeight: 500,
+                cursor: 'pointer',
+                '&:hover': { color: '#ccc' },
+              }}
+            >
+              Logout
+            </Link>
+          )}
         </Stack>
 
         {/* Social Icons */}
@@ -81,10 +120,7 @@ const Footer = () => {
       </Box>
 
       {/* Footer Text */}
-      <Typography
-        variant="body2"
-        sx={{ fontSize: '1.1rem', mt: 4 }}
-      >
+      <Typography variant="body2" sx={{ fontSize: '1.1rem', mt: 4 }}>
         Copyright © 2025 SRI SHAKTIPEETHA KOTI LINGA KSHETHRAM |
         Designed by{' '}
         <Link

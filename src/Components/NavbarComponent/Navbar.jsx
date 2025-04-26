@@ -33,16 +33,13 @@ const Navbar = ({ isHomePage }) => {
   useEffect(() => {
     const storedUser = localStorage.getItem("userData");
     console.log("Stored userData:.......", storedUser); // 👈 See what's in localStorage
-  
+
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       console.log("Parsed userData:", parsedUser); // 👈 See parsed object
       setUser(parsedUser);
     }
   }, []);
-  
-
-  
 
   const handleProfileNavigate = () => {
     console.log("clicked");
@@ -63,11 +60,13 @@ const Navbar = ({ isHomePage }) => {
 
   const handleDonateClick = () => {
     if (!user) {
-      setSnackbarOpen(true);
+      // If not logged in, directly redirect to login page
+      navigate("/login");
     } else if (user.donateNumber) {
-      // User already donated
+      // If already donated, show snackbar
       setSnackbarOpen(true);
     } else {
+      // If user logged in and not donated, go to donation page
       navigate("/donete");
     }
   };
@@ -79,11 +78,10 @@ const Navbar = ({ isHomePage }) => {
     { label: "Contact", path: "/contact" },
     { label: "Register", path: "/register" },
   ];
-  
+
   const navLinks = user
     ? baseLinks.filter((link) => link.label !== "Register")
     : baseLinks;
-  
 
   return (
     <>
@@ -152,16 +150,15 @@ const Navbar = ({ isHomePage }) => {
                   label={user?.userName || "Profile"}
                   avatar={
                     <Avatar
-                    src={
-                      user?.profilePic
-                        ? `https://templeservice.signaturecutz.in/storege/userdp/${user.profilePic}`
-                        : ""
-                    }
-                    sx={{ width: 40, height: 40 }}
-                  >
-                    {user?.userName?.charAt(0)}
-                  </Avatar>
-                  
+                      src={
+                        user?.profilePic
+                          ? `http://localhost:5000/storege/userdp/${user.profilePic}`
+                          : ""
+                      }
+                      sx={{ width: 40, height: 40 }}
+                    >
+                      {user?.userName?.charAt(0)}
+                    </Avatar>
                   }
                   onClick={handleProfileNavigate}
                   variant="outlined"
@@ -255,22 +252,21 @@ const Navbar = ({ isHomePage }) => {
         <Outlet />
       </Box>
       <Snackbar
-  open={snackbarOpen}
-  autoHideDuration={3000}
-  onClose={() => setSnackbarOpen(false)}
-  anchorOrigin={{ vertical: "top", horizontal: "center" }}
->
-  <Alert
-    onClose={() => setSnackbarOpen(false)}
-    severity={user && user.donateNumber ? "info" : "warning"}
-    sx={{ width: "100%" }}
-  >
-    {user && user.donateNumber
-      ? "You have already donated. Thank you!"
-      : "Please login first to continue!"}
-  </Alert>
-</Snackbar>
-
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity={user && user.donateNumber ? "info" : "warning"}
+          sx={{ width: "100%" }}
+        >
+          {user && user.donateNumber
+            ? "You have already donated. Thank you!"
+            : "Please login first to continue!"}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

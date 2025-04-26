@@ -44,13 +44,15 @@ const RegisterForm = () => {
     country: "",
     postalCode: "",
   });
+  const [previewUrl, setPreviewUrl] = useState(null);
+
 
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
     const updatedParts = { ...addressParts, [name]: value };
     setAddressParts(updatedParts);
 
-    const fullAddress = `${updatedParts.street}, ${updatedParts.city}, ${updatedParts.state}, ${updatedParts.country} - ${updatedParts.postalCode}`;
+    const fullAddress = `${updatedParts.street}, ${updatedParts.city}, ${updatedParts.state}, ${updatedParts.country},${updatedParts.postalCode}`;
     setFormData((prev) => ({ ...prev, address: fullAddress }));
   };
 
@@ -63,8 +65,13 @@ const RegisterForm = () => {
   };
 
   const handleFileChange = (e) => {
-    setFormData((prev) => ({ ...prev, profilePic: e.target.files[0] }));
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, profilePic: file }));
+      setPreviewUrl(URL.createObjectURL(file)); // set preview
+    }
   };
+  
 
   const navigate = useNavigate();
 
@@ -84,7 +91,7 @@ const RegisterForm = () => {
     }
 
     try {
-      await axios.post("https://templeservice.signaturecutz.in/user/register", data, {
+      await axios.post("http://localhost:5000/user/api/register", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -144,7 +151,7 @@ const RegisterForm = () => {
           component="form"
           onSubmit={handleSubmit}
           sx={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${backgroundImg})`,
+            backgroundImage: `linear-gradient(rgba(7, 6, 6, 1.7), rgba(0, 0, 0, 0.7)), url(${backgroundImg})`,
             p: 4,
             borderRadius: 3,
             boxShadow: 3,
@@ -293,16 +300,33 @@ const RegisterForm = () => {
           </FormControl>
 
           <Box sx={{ mt: 2, mb: 2 }}>
-            <Typography sx={{ color: "white", mb: 1 }}>
-              Upload Profile Image
-            </Typography>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              style={{ color: "white" }}
-            />
-          </Box>
+  <Typography sx={{ color: "white", mb: 1 }}>
+    Upload Profile Image
+  </Typography>
+  <input
+    type="file"
+    accept="image/*"
+    onChange={handleFileChange}
+    style={{ color: "white" }}
+  />
+
+  {previewUrl && (
+    <Box mt={2}>
+      <img
+        src={previewUrl}
+        alt="Preview"
+        style={{
+          width: "80px",
+          height: "80px",
+          objectFit: "cover",
+          borderRadius: "8px",
+          border: "2px solid white",
+        }}
+      />
+    </Box>
+  )}
+</Box>
+
 
           <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }}>
             Register

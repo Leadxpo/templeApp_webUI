@@ -64,7 +64,7 @@ const RegisterBanner = () => {
           }}
         >
           <Typography variant="h6" sx={{  fontSize: { xs: '2rem', sm: '3rem', md: '4rem' } }}>
-            About Us
+            About us
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: '800px', mt: 2 }}>
             Witness the grandeur of Koti Lingas symbolizing eternity and infinite power.

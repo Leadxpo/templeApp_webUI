@@ -31,7 +31,6 @@ const Profile = () => {
   const [donation, setDonation] = useState(null);
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
   const [formData, setFormData] = useState({
-   
     userName: "",
     userId: "",
     email: "",
@@ -43,6 +42,15 @@ const Profile = () => {
     address: "",
     gothram: "",
   });
+
+  const [addressParts, setAddressParts] = useState({
+    street: "",
+    city: "",
+    state: "",
+    country: "",
+    postalCode: "",
+  });
+
   const [profilePic, setProfilePic] = useState(null);
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
@@ -51,18 +59,17 @@ const Profile = () => {
       setProfilePic(file);
     }
   };
-  
 
   useEffect(() => {
     const storedUser = localStorage.getItem("userData");
     const token = localStorage.getItem("token");
-  
+
     if (storedUser && token) {
       const parsedUser = JSON.parse(storedUser);
       console.log("User from localStorage:", parsedUser);
-  
+
       setUser(parsedUser);
-  
+
       const donateNumber = parsedUser?.donateNumber;
       if (donateNumber) {
         console.log("📦 Found donateNumber:", donateNumber);
@@ -74,10 +81,19 @@ const Profile = () => {
       console.warn("❌ Missing user or token");
     }
   }, []);
-  
 
   useEffect(() => {
-    if (user) {
+    if (user?.address) {
+      const parts = user.address.split(",").map((p) => p.trim());
+
+      setAddressParts({
+        street: parts[0] || "",
+        city: parts[1] || "",
+        state: parts[2] || "",
+        country: parts.slice(3, parts.length - 1).join(", ") || "",
+        postalCode: parts[parts.length - 1] || "",
+      });
+
       setFormData({
         userName: user.userName || "",
         userId: user.userId || "",
@@ -92,8 +108,6 @@ const Profile = () => {
       });
     }
   }, [user]);
-  
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -102,15 +116,11 @@ const Profile = () => {
 
   const navigate = useNavigate();
 
- 
-  
-  
-
   const fetchDonationDetails = async (donateNumber) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "https://templeservice.signaturecutz.in/donate/api/get-by-donate-number",
+        "http://localhost:5000/donate/api/get-by-donate-number",
         { donateNumber },
         {
           headers: {
@@ -156,6 +166,16 @@ const Profile = () => {
     },
   };
 
+  const handleAddressChange = (e) => {
+    const { name, value } = e.target;
+    const updatedParts = { ...addressParts, [name]: value };
+    setAddressParts(updatedParts);
+
+    const fullAddress = `${updatedParts.street}, ${updatedParts.city}, ${updatedParts.state}, ${updatedParts.country}, ${updatedParts.postalCode}`;
+
+    setFormData((prev) => ({ ...prev, address: fullAddress }));
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("userData");
     localStorage.removeItem("token");
@@ -187,7 +207,7 @@ const Profile = () => {
       data.append(key, formData[key]);
     }
 
-    data.append("id", user.id); 
+    data.append("id", user.id);
 
     console.log("User ID being sent:.........", user.id);
 
@@ -197,7 +217,7 @@ const Profile = () => {
 
     try {
       const response = await axios.patch(
-        "https://templeservice.signaturecutz.in/user/user-update",
+        "http://localhost:5000/user/api/user-update",
         data,
         {
           headers: {
@@ -246,10 +266,16 @@ const Profile = () => {
             <Grid container spacing={3}>
               <Grid item xs={12} sm={4} display="flex" alignItems="center">
                 <Box sx={{ position: "relative", display: "inline-block" }}>
-                <Avatar
-  src={profilePic ? URL.createObjectURL(profilePic) : (user?.profilePic ? `https://templeservice.signaturecutz.in/storege/userdp/${user.profilePic}` : "")}
-  sx={{ width: 100, height: 100 }}
-/>
+                  <Avatar
+                    src={
+                      profilePic
+                        ? URL.createObjectURL(profilePic)
+                        : user?.profilePic
+                        ? `http://localhost:5000/storege/userdp/${user.profilePic}`
+                        : ""
+                    }
+                    sx={{ width: 100, height: 100 }}
+                  />
 
                   <label htmlFor="profile-upload">
                     <input
@@ -264,7 +290,7 @@ const Profile = () => {
                         position: "absolute",
                         bottom: 0,
                         right: 0,
-                        
+
                         backgroundColor: "rgba(0,0,0,0.6)",
                         color: "white",
                         "&:hover": {
@@ -278,7 +304,36 @@ const Profile = () => {
                 </Box>
               </Grid>
 
+            
               <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  label="User ID"
+                  name="userId"
+                  value={formData.userId}
+                  onChange={handleInputChange}
+                  disabled
+                  InputLabelProps={{ style: { color: "white" } }}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "white" },
+                      "&:hover fieldset": { borderColor: "white" },
+                      "&.Mui-disabled fieldset": { borderColor: "white" },
+                    },
+                    "& .MuiOutlinedInput-input.Mui-disabled": {
+                      color: "white", // this targets the actual input inside the TextField
+                      WebkitTextFillColor: "white", // <-- This is the key fix for Chrome!
+                    },
+                    "& .MuiInputLabel-root.Mui-disabled": {
+                      color: "white",
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Name"
@@ -288,34 +343,6 @@ const Profile = () => {
                   {...textFieldProps}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
-              <TextField
-  fullWidth
-  label="User ID"
-  name="userId"
-  value={formData.userId}
-  onChange={handleInputChange}
-  disabled
-  InputLabelProps={{ style: { color: "white" } }}
-  InputProps={{
-    style: { color: "white" }, // text color
-    readOnly: true, // optional for extra clarity
-  }}
-  sx={{
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': { borderColor: 'white' },
-      '&:hover fieldset': { borderColor: 'white' },
-      '&.Mui-disabled fieldset': { borderColor: 'white' }, // border color when disabled
-      '&.Mui-disabled input': { color: 'white' }, // text color when disabled
-    },
-    '& .MuiInputLabel-root.Mui-disabled': {
-      color: 'white', // label color when disabled
-    },
-  }}
-/>
-
-              </Grid>
-
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -358,6 +385,7 @@ const Profile = () => {
                   {...textFieldProps}
                 />
               </Grid>
+               
 
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -369,18 +397,41 @@ const Profile = () => {
                   {...textFieldProps}
                 />
               </Grid>
-
               <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Gender"
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleInputChange}
-                  {...textFieldProps}
-                />
+                <FormControl fullWidth>
+                  <InputLabel sx={{ color: "white" }}>Gender</InputLabel>
+                  <Select
+                    value={formData.gender}
+                    name="gender"
+                    onChange={handleInputChange}
+                    sx={{
+                      color: "white",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "white",
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "white",
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "white",
+                      },
+                    }}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          backgroundColor: "#0d1117",
+                          color: "white",
+                          border: "1px solid white",
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                    <MenuItem value="Other">Other</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
-
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -392,24 +443,51 @@ const Profile = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  {...textFieldProps}
-                />
+           
+
+              <Grid item xs={12}>
+                <Grid container spacing={2}>
+                  {["street", "city", "state", "country", "postalCode"].map(
+                    (field) => (
+                      <Grid item xs={12} sm={6} key={field}>
+                        <TextField
+                          label={field.charAt(0).toUpperCase() + field.slice(1)}
+                          name={field}
+                          value={addressParts[field]}
+                          onChange={handleAddressChange}
+                          fullWidth
+                          margin="normal"
+                          InputLabelProps={{ style: { color: "white" } }}
+                          InputProps={{
+                            style: { color: "white" },
+                            sx: {
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "white",
+                              },
+                              "&:hover .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "white",
+                              },
+                              "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                {
+                                  borderColor: "white",
+                                },
+                            },
+                          }}
+                        />
+                      </Grid>
+                    )
+                  )}
+                </Grid>
               </Grid>
+            
 
               <Grid item xs={12} display="flex" justifyContent="flex-end">
-                <Button
+                {/* <Button
                   variant="outlined"
                   sx={{ mr: 2, color: "white", borderColor: "white" }}
                 >
                   Cancel
-                </Button>
+                </Button> */}
                 <Button
                   variant="contained"
                   sx={{ mr: 2, backgroundColor: "white", color: "black" }}

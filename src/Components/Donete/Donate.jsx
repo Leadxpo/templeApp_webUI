@@ -9,6 +9,8 @@ import axios from "axios";
 import { Alert } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import Footer from "../Footer/Footer";
+
 
 
 import {
@@ -60,6 +62,8 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState(""); // To show success message
   const [errorMessage, setErrorMessage] = useState("");
   const [hasDonationNumber, setHasDonationNumber] = useState(false);
+  const [loading, setLoading] = useState(false);
+
 
   const [user, setUser] = useState(null);
 
@@ -91,12 +95,12 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
     e.preventDefault();
   
     if (!token) {
-      alert("User  not authenticated. Please log in again.");
+      alert("User not authenticated. Please log in again.");
       return;
     }
   
-    if (!storedUser  || !storedUser .userId) {
-      alert("User  not found. Please log in again.");
+    if (!storedUser || !storedUser.userId) {
+      alert("User not found. Please log in again.");
       return;
     }
   
@@ -105,8 +109,10 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
       return;
     }
   
+    setLoading(true); // Start loading spinner
+  
     const formDataToSend = new FormData();
-    formDataToSend.append("userId", storedUser .userId);
+    formDataToSend.append("userId", storedUser.userId);
     formDataToSend.append("userName", formData.userName);
     formDataToSend.append("gothram", formData.gothram);
     formDataToSend.append("phoneNumber", formData.phoneNumber);
@@ -117,7 +123,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
   
     try {
       const response = await axios.post(
-        "https://templeservice.signaturecutz.in/payments/api/create-payment",
+        "http://localhost:5000/payments/api/create-payment",
         formDataToSend,
         {
           headers: {
@@ -127,7 +133,6 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
         }
       );
   
-      console.log("Response from payment API:", response.data);
       if (response.status === 200 && response.data.success) {
         setSnackbarMessage("Payment successfully processed! Thank you for your support.");
         setOpenSnackbar(true);
@@ -135,19 +140,18 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
           setShowPaymentImage(false);
         }, 3000);
   
-        // Check if the user already has a donation number
-        if (!storedUser .donateNumber) {
+        if (!storedUser.donateNumber) {
           const donateData = {
             donateNumber: inputNumber,
             userName: formData.userName,
-            userId: storedUser .userId,
+            userId: storedUser.userId,
             phoneNumber: formData.phoneNumber,
             gothram: formData.gothram,
             dob: formData.dob,
           };
   
           const donateResponse = await axios.post(
-            "https://templeservice.signaturecutz.in/donate/api/create-donate-number",
+            "http://localhost:5000/donate/api/create-donate-number",
             donateData,
             {
               headers: {
@@ -158,27 +162,14 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
           );
   
           if (donateResponse.status === 200) {
-            console.log("Donate number recorded successfully");
-  
-            // Store donate number separately in local storage
-            console.log("Storing donate number in local storage:", inputNumber);
             localStorage.setItem("donateNumber", inputNumber);
-  
-            // Verify if it was stored correctly
-            const storedDonateNumber = localStorage.getItem("donateNumber");
-            console.log(
-              "Retrieved donate number from local storage:",
-              storedDonateNumber
-            );
-  
-            // ✅ Update user with donate number
-            const updatedUser  = { ...storedUser , donateNumber: inputNumber }; // Update the user object
+            const updatedUser = { ...storedUser, donateNumber: inputNumber };
             const updateFormData = new FormData();
-            updateFormData.append("id", storedUser .id);
+            updateFormData.append("id", storedUser.id);
             updateFormData.append("donateNumber", inputNumber);
   
             const updateResponse = await axios.patch(
-              "https://templeservice.signaturecutz.in/user/user-update",
+              "http://localhost:5000/user/api/user-update",
               updateFormData,
               {
                 headers: {
@@ -189,20 +180,21 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
             );
   
             if (updateResponse.status === 200) {
-              console.log("User  updated with donate number successfully");
-              localStorage.setItem("userData", JSON.stringify(updatedUser )); // Update local storage
-              setUser (updatedUser ); // Update UI if needed
+              localStorage.setItem("userData", JSON.stringify(updatedUser));
+              setUser(updatedUser);
+              window.location.reload();
             }
           }
-        } else {
-          console.log("User  already has a donation number. Skipping creation.");
         }
       }
     } catch (error) {
       console.error("Error submitting payment:", error?.response || error);
       alert("There was an issue with the payment. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading spinner
     }
   };
+  
 
   const handleModal1Open = () => setOpenModal1(true);
   const handleModal1Close = () => setOpenModal1(false);
@@ -399,7 +391,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
                 }
 
                 const response = await axios.post(
-                  "https://templeservice.signaturecutz.in/donate/api/check-number",
+                  "http://localhost:5000/donate/api/check-number",
                   { number: parseInt(inputNumber) },
                   {
                     headers: {
@@ -474,8 +466,8 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
                   </button>
                 </Box>
               </Box>
-
-              <Button
+<Box style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
+              <Button 
                 variant="contained"
                 color="success"
                 sx={{ mt: 2 }}
@@ -486,6 +478,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
               >
                 Donate Now
               </Button>
+              </Box>
             </>
           )}
 
@@ -725,19 +718,20 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
 
             {/* Submit Button */}
             <Button
-              variant="contained"
-              onClick={handlePaymentSubmit}
-              disabled={!file}
-              sx={{
-                backgroundColor: "gray !important",
-                color: "white !important",
-                "&:hover": {
-                  backgroundColor: "#333", // Optional hover effect
-                },
-              }}
-            >
-              Submit
-            </Button>
+  variant="contained"
+  onClick={handlePaymentSubmit}
+  disabled={!file || loading}
+  sx={{
+    backgroundColor: "green !important",
+    color: "white !important",
+    "&:hover": {
+      backgroundColor: "#2e7d32 !important",
+    },
+  }}
+>
+  {loading ? "Processing..." : "Submit"}
+</Button>
+
             {errorMessage && (
               <Alert severity="error" sx={{ mt: 2 }}>
                 {errorMessage}
@@ -754,99 +748,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
       </Dialog>
 
       {/* Footer */}
-      <Box
-        sx={{
-          backgroundColor: "#0d1117",
-          color: "#fff",
-          py: 4,
-          px: 3,
-          textAlign: "center",
-          mt: 10,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            justifyContent: "space-between",
-            alignItems: "center",
-            maxWidth: "1200px",
-            mx: "auto",
-            mb: 2,
-          }}
-        >
-          <Box sx={{ mb: { xs: 2, md: 0 } }}>
-            <img src={LogoImage} alt="Logo" style={{ height: 80 }} />
-          </Box>
-
-          <Stack
-            direction="row"
-            spacing={4}
-            sx={{ mb: { xs: 2, md: 0 }, flexWrap: "wrap" }}
-          >
-            {["Home", "About", "Contact", "Register", "Log In"].map((item) => (
-              <Link
-                key={item}
-                href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-                underline="none"
-                sx={{
-                  color: "white",
-                  fontSize: "1.3rem",
-                  fontWeight: 500,
-                  "&:hover": { color: "#ccc" },
-                }}
-              >
-                {item}
-              </Link>
-            ))}
-          </Stack>
-          <Snackbar
-  open={openSnackbar}
-  autoHideDuration={6000}
-  onClose={() => setOpenSnackbar(false)}
-  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
->
-  <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
-    {snackbarMessage}
-  </Alert>
-</Snackbar>
-
-
-          <Stack direction="row" spacing={2}>
-            <IconButton
-              href="https://facebook.com"
-              target="_blank"
-              sx={{ color: "white" }}
-            >
-              <FacebookIcon fontSize="large" />
-            </IconButton>
-            <IconButton
-              href="https://instagram.com"
-              target="_blank"
-              sx={{ color: "white" }}
-            >
-              <InstagramIcon fontSize="large" />
-            </IconButton>
-            <IconButton
-              href="https://youtube.com"
-              target="_blank"
-              sx={{ color: "white" }}
-            >
-              <YouTubeIcon fontSize="large" />
-            </IconButton>
-          </Stack>
-        </Box>
-
-        <Typography variant="body2" sx={{ fontSize: "1.1rem", mt: 10 }}>
-          Copyright © 2025 SRI SHAKTIPEETHA KOTI LINGA KSHETHRAM | Designed by
-          <Typography
-            component="span"
-            sx={{ color: "#90EE90", ml: 1, fontWeight: 600 }}
-          >
-            LEADXPO IT SOLUTIONS
-          </Typography>
-        </Typography>
-      </Box>
+    <Footer/>
     </Box>
   );
 };
