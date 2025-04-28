@@ -124,16 +124,15 @@ const RegisterForm = () => {
 
   const textFieldStyles = {
     "& .MuiOutlinedInput-root": {
-      "& fieldset": { borderColor: "white" },
-      "&:hover fieldset": { borderColor: "white" },
-      "&.Mui-focused fieldset": { borderColor: "white" },
+      "& fieldset": { borderColor: "#ffffff30" },
+      "&:hover fieldset": { borderColor: "#ffffff30" },
+      "&.Mui-focused fieldset": { borderColor: "#ffffff30" },
     },
   };
 
   return (
     <Box
       sx={{
-        backgroundColor: "black",
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
@@ -151,7 +150,6 @@ const RegisterForm = () => {
           component="form"
           onSubmit={handleSubmit}
           sx={{
-            backgroundImage: `linear-gradient(rgba(7, 6, 6, 1.7), rgba(0, 0, 0, 0.7)), url(${backgroundImg})`,
             p: 4,
             borderRadius: 3,
             boxShadow: 3,
@@ -160,8 +158,6 @@ const RegisterForm = () => {
             backgroundSize: "cover",
             backgroundPosition: "center",
             padding: "20px 7px",
-
-            width: "100%",
           }}
           encType="multipart/form-data"
         >

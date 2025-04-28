@@ -61,7 +61,10 @@ const LoginPage = () => {
         alignItems: "center",
       }}
     >
-      <Grid container spacing={4} alignItems="center">
+      <Grid container spacing={4} alignItems="center"  sx={{
+            width: "100%",
+            height: "70%",
+          }}>
         {/* Left: Login Form */}
         <Grid item xs={12} md={6}>
           <motion.div

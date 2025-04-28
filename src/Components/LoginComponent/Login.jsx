@@ -66,7 +66,7 @@ const RegisterBanner = () => {
           </Typography>
         </Box>
       </Box>
-      <Box>
+      <Box >
         <RegisterFrom />
       </Box>
       <Box>

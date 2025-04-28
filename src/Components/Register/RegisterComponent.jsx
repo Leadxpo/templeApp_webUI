@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import templeImage from "../../Images/RegisterImage.jpg"; // Adjust path as needed
 import RegisterFrom from "./Register";
 import Footer from "../Footer/Footer";
+import lingam from "../../Images/lord-shiva.jpg"; // adjust path based on file location
 
 const RegisterBanner = () => {
   return (
@@ -66,7 +67,17 @@ const RegisterBanner = () => {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ mb: 10 }}>
+      <Box sx={{
+            backgroundImage: `linear-gradient(rgba(7, 6, 6, 1.7), rgba(0, 0, 0, 0.6)), url(${lingam})`,
+            borderRadius: 3,
+            boxShadow: 3,
+            color: "white",
+            backgroundSize: "100% 100%",
+            backgroundPosition: "center",
+            padding: "20px 7px",
+            width: "100%",
+          }}
+      >
         <RegisterFrom />
       </Box>
       <Box>
