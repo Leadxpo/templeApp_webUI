@@ -120,7 +120,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:5000/donate/api/get-by-donate-number",
+        "https://templeservice.signaturecutz.in/donate/api/get-by-donate-number",
         { donateNumber },
         {
           headers: {
@@ -217,7 +217,7 @@ const Profile = () => {
 
     try {
       const response = await axios.patch(
-        "http://localhost:5000/user/api/user-update",
+        "https://templeservice.signaturecutz.in/user/api/user-update",
         data,
         {
           headers: {
@@ -271,7 +271,7 @@ const Profile = () => {
                       profilePic
                         ? URL.createObjectURL(profilePic)
                         : user?.profilePic
-                        ? `http://localhost:5000/storege/userdp/${user.profilePic}`
+                        ? `https://templeservice.signaturecutz.in/storege/userdp/${user.profilePic}`
                         : ""
                     }
                     sx={{ width: 100, height: 100 }}
