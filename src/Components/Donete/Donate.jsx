@@ -7,11 +7,15 @@ import lingamvideo from "../../Images/lingamvideo.gif";
 import PhonePayImage from "../../Images/phnoepay.jpg";
 import axios from "axios";
 import { Alert } from "@mui/material";
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import Footer from "../Footer/Footer";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import ObjModel from "../ObjModel";
 
-
+// import ModelViewer from '../../Components/ModelViewer';
+import "./Donate.css";
 
 import {
   Box,
@@ -41,14 +45,11 @@ const RegisterBanner = () => {
   const [filePreview, setFilePreview] = useState(null);
   const [donationAmount, setDonationAmount] = useState(5000);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-const [snackbarMessage, setSnackbarMessage] = useState('');
-
-
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
-  
 
   const [formData, setFormData] = useState({
     userName: "",
@@ -63,7 +64,6 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState("");
   const [hasDonationNumber, setHasDonationNumber] = useState(false);
   const [loading, setLoading] = useState(false);
-
 
   const [user, setUser] = useState(null);
 
@@ -93,24 +93,24 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!token) {
       alert("User not authenticated. Please log in again.");
       return;
     }
-  
+
     if (!storedUser || !storedUser.userId) {
       alert("User not found. Please log in again.");
       return;
     }
-  
+
     if (!file) {
       alert("Please upload your payment receipt.");
       return;
     }
-  
+
     setLoading(true); // Start loading spinner
-  
+
     const formDataToSend = new FormData();
     formDataToSend.append("userId", storedUser.userId);
     formDataToSend.append("userName", formData.userName);
@@ -120,7 +120,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
     formDataToSend.append("amount", "5000");
     formDataToSend.append("paymentMethod", "QR Code");
     formDataToSend.append("paymentRecept", file);
-  
+
     try {
       const response = await axios.post(
         "https://templeservice.signaturecutz.in/payments/api/create-payment",
@@ -132,14 +132,16 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
           },
         }
       );
-  
+
       if (response.status === 200 && response.data.success) {
-        setSnackbarMessage("Payment successfully processed! Thank you for your support.");
+        setSnackbarMessage(
+          "Payment successfully processed! Thank you for your support."
+        );
         setOpenSnackbar(true);
         setTimeout(() => {
           setShowPaymentImage(false);
         }, 3000);
-  
+
         if (!storedUser.donateNumber) {
           const donateData = {
             donateNumber: inputNumber,
@@ -149,7 +151,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
             gothram: formData.gothram,
             dob: formData.dob,
           };
-  
+
           const donateResponse = await axios.post(
             "https://templeservice.signaturecutz.in/donate/api/create-donate-number",
             donateData,
@@ -160,14 +162,14 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
               },
             }
           );
-  
+
           if (donateResponse.status === 200) {
             localStorage.setItem("donateNumber", inputNumber);
             const updatedUser = { ...storedUser, donateNumber: inputNumber };
             const updateFormData = new FormData();
             updateFormData.append("id", storedUser.id);
             updateFormData.append("donateNumber", inputNumber);
-  
+
             const updateResponse = await axios.patch(
               "https://templeservice.signaturecutz.in/user/user-update",
               updateFormData,
@@ -178,7 +180,7 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
                 },
               }
             );
-  
+
             if (updateResponse.status === 200) {
               localStorage.setItem("userData", JSON.stringify(updatedUser));
               setUser(updatedUser);
@@ -194,7 +196,6 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
       setLoading(false); // Stop loading spinner
     }
   };
-  
 
   const handleModal1Open = () => setOpenModal1(true);
   const handleModal1Close = () => setOpenModal1(false);
@@ -278,44 +279,47 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
       </Box>
 
       {/* Donate Image */}
-      <Box
+     <Box
         sx={{
+           height: 1000, 
           mb: 4,
           display: "flex",
           justifyContent: "center",
           cursor: "pointer",
         }}
       >
-        <img
-          src={DoneteImage}
-          alt="Donate"
-          style={{ width: "100%", height: "50%" }}
-        />
+         <Canvas camera={{ position: [0, 2, 5], fov: 45 }}>
+
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[5, 5, 5]} />
+        <ObjModel />
+         <OrbitControls />
+      </Canvas>
       </Box>
 
+      {/* <ModelViewer modelPath="/models/L.obj" /> */}
+
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-      <Button
-  variant="contained"
-  onClick={handleModal1Open}
-  disabled={hasDonationNumber}
-  sx={{
-    mt: 2,
-    bgcolor: hasDonationNumber ? "red" : "primary.main",
-    color: "white",
-    "&:hover": {
-      bgcolor: hasDonationNumber ? "darkred" : "primary.dark",
-    },
-    "&.Mui-disabled": {
-      bgcolor: "red",
-      color: "white",
-    },
-  }}
->
-  {hasDonationNumber ? "Already Donated" : "Donate now"}
-</Button>
-
-</Box>
-
+        <Button
+          variant="contained"
+          onClick={handleModal1Open}
+          disabled={hasDonationNumber}
+          sx={{
+            mt: 2,
+            bgcolor: hasDonationNumber ? "red" : "primary.main",
+            color: "white",
+            "&:hover": {
+              bgcolor: hasDonationNumber ? "darkred" : "primary.dark",
+            },
+            "&.Mui-disabled": {
+              bgcolor: "red",
+              color: "white",
+            },
+          }}
+        >
+          {hasDonationNumber ? "Already Donated" : "Donate now"}
+        </Button>
+      </Box>
 
       {/* {hasDonationNumber && (
         <Typography sx={{ color: "red", textAlign: "center", mt: 2 }}>
@@ -466,18 +470,24 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
                   </button>
                 </Box>
               </Box>
-<Box style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-              <Button 
-                variant="contained"
-                color="success"
-                sx={{ mt: 2 }}
-                onClick={() => {
-                  handleModal1Close();
-                  setOpenFormModal(true);
+              <Box
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                Donate Now
-              </Button>
+                <Button
+                  variant="contained"
+                  color="success"
+                  sx={{ mt: 2 }}
+                  onClick={() => {
+                    handleModal1Close();
+                    setOpenFormModal(true);
+                  }}
+                >
+                  Donate Now
+                </Button>
               </Box>
             </>
           )}
@@ -662,7 +672,11 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
               alt="Payment"
               style={{ width: "70%", marginTop: "1rem" }}
             />
-            <Typography variant="h6" sx={{ mt: 2 }} style={{fontFamily:"fantasy"}}>
+            <Typography
+              variant="h6"
+              sx={{ mt: 2 }}
+              style={{ fontFamily: "fantasy" }}
+            >
               Amount: ₹{donationAmount}
             </Typography>
 
@@ -718,19 +732,19 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
 
             {/* Submit Button */}
             <Button
-  variant="contained"
-  onClick={handlePaymentSubmit}
-  disabled={!file || loading}
-  sx={{
-    backgroundColor: "green !important",
-    color: "white !important",
-    "&:hover": {
-      backgroundColor: "#2e7d32 !important",
-    },
-  }}
->
-  {loading ? "Processing..." : "Submit"}
-</Button>
+              variant="contained"
+              onClick={handlePaymentSubmit}
+              disabled={!file || loading}
+              sx={{
+                backgroundColor: "green !important",
+                color: "white !important",
+                "&:hover": {
+                  backgroundColor: "#2e7d32 !important",
+                },
+              }}
+            >
+              {loading ? "Processing..." : "Submit"}
+            </Button>
 
             {errorMessage && (
               <Alert severity="error" sx={{ mt: 2 }}>
@@ -747,8 +761,10 @@ const [snackbarMessage, setSnackbarMessage] = useState('');
         </DialogContent>
       </Dialog>
 
+      {/* 3d  */}
+
       {/* Footer */}
-    <Footer/>
+      <Footer />
     </Box>
   );
 };

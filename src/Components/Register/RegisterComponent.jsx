@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import templeImage from "../../Images/RegisterImage.jpg"; // Adjust path as needed
+import templeImage from "../../Images/RegisterImage.jpg";
 import RegisterFrom from "./Register";
 import Footer from "../Footer/Footer";
-import lingam from "../../Images/lord-shiva.jpg"; // adjust path based on file location
+import lingam from "../../Images/lord-shiva.jpg"; 
 
 const RegisterBanner = () => {
   return (
@@ -67,17 +67,37 @@ const RegisterBanner = () => {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{
-            backgroundImage: `linear-gradient(rgba(7, 6, 6, 1.7), rgba(0, 0, 0, 0.6)), url(${lingam})`,
-            borderRadius: 3,
-            boxShadow: 3,
-            color: "white",
-            backgroundSize: "100% 100%",
-            backgroundPosition: "center",
-            padding: "20px 7px",
-            width: "100%",
-          }}
-      >
+      <Box
+  sx={{
+    backgroundImage: `linear-gradient(rgba(7, 6, 6, 0.7), rgba(0, 0, 0, 0.6)), url(${lingam})`,
+    borderRadius: 3,
+    boxShadow: 3,
+    color: "white",
+    backgroundSize: {
+      xs: "cover",  // for mobile
+      sm: "cover",  // small devices
+      md: "100% 100%",  // tablets and up
+      width: "100%",
+    },
+    backgroundPosition: {
+      xs: "center",
+      sm: "center",
+      md: "center"
+    },
+    padding: {
+      // xs: "16px 10px",
+      // sm: "20px 14px",
+      // md: "20px 20px"
+    },
+    width: "100%",
+    minHeight: {
+      xs: "200px",
+      sm: "300px",
+      md: "400px"
+    }
+  }}
+>
+
         <RegisterFrom />
       </Box>
       <Box>

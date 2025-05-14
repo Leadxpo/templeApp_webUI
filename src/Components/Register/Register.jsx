@@ -46,7 +46,6 @@ const RegisterForm = () => {
   });
   const [previewUrl, setPreviewUrl] = useState(null);
 
-
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
     const updatedParts = { ...addressParts, [name]: value };
@@ -71,7 +70,6 @@ const RegisterForm = () => {
       setPreviewUrl(URL.createObjectURL(file)); // set preview
     }
   };
-  
 
   const navigate = useNavigate();
 
@@ -91,9 +89,13 @@ const RegisterForm = () => {
     }
 
     try {
-      await axios.post("https://templeservice.signaturecutz.in/user/register", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await axios.post(
+        "https://templeservice.signaturecutz.in/user/register",
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       alert("User registered successfully!");
       setFormData({
@@ -113,13 +115,16 @@ const RegisterForm = () => {
       navigate("/login");
     } catch (error) {
       console.error("Registration failed:", error);
-      if (error.response && error.response.data && error.response.data.message) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         alert(error.response.data.message);
       } else {
         alert("Registration failed. Please try again.");
       }
     }
-    
   };
 
   const textFieldStyles = {
@@ -296,33 +301,32 @@ const RegisterForm = () => {
           </FormControl>
 
           <Box sx={{ mt: 2, mb: 2 }}>
-  <Typography sx={{ color: "white", mb: 1 }}>
-    Upload Profile Image
-  </Typography>
-  <input
-    type="file"
-    accept="image/*"
-    onChange={handleFileChange}
-    style={{ color: "white" }}
-  />
+            <Typography sx={{ color: "white", mb: 1 }}>
+              Upload Profile Image
+            </Typography>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ color: "white" }}
+            />
 
-  {previewUrl && (
-    <Box mt={2}>
-      <img
-        src={previewUrl}
-        alt="Preview"
-        style={{
-          width: "80px",
-          height: "80px",
-          objectFit: "cover",
-          borderRadius: "8px",
-          border: "2px solid white",
-        }}
-      />
-    </Box>
-  )}
-</Box>
-
+            {previewUrl && (
+              <Box mt={2}>
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                    border: "2px solid white",
+                  }}
+                />
+              </Box>
+            )}
+          </Box>
 
           <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }}>
             Register

@@ -6,14 +6,12 @@ import {
   Button,
   IconButton,
   InputAdornment,
-  Grid,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
-import templeImage from "../../Images/RegisterImage.jpg";
-import siva1 from "../../Images/siva2.jpg";
+import siva1 from "../../Images/siva2.jpg"; // Your background image
 
 const LoginPage = () => {
   const [formData, setFormData] = React.useState({ userId: "", password: "" });
@@ -52,100 +50,74 @@ const LoginPage = () => {
   return (
     <Box
       sx={{
-        backgroundColor: "black",
-        // minHeight: "100vh",
-        color: "white",
-        px: { xs: 2, md: 8 },
-        py: 4,
+        backgroundImage: `linear-gradient(rgba(7, 6, 6, 0.7), rgba(0, 0, 0, 0.6)), url(${siva1})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        width: "100%",
         display: "flex",
+        justifyContent: "center",
         alignItems: "center",
+        // px: 2,
       }}
     >
-      <Grid container spacing={4} alignItems="center"  sx={{
-            width: "100%",
-            height: "70%",
-          }}>
-        {/* Left: Login Form */}
-        <Grid item xs={12} md={6}>
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              sx={{
-                backgroundColor: "#121212",
-                p: 4,
-                borderRadius: 2,
-                boxShadow: 3,
-              }}
-            >
-              <Typography variant="h4" align="center" gutterBottom>
-                Log In
-              </Typography>
-              <TextField
-                label="ID"
-                name="userId"
-                value={formData.userId}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                InputLabelProps={{ style: { color: "white" } }}
-                InputProps={{ style: { color: "white", height: "56px" } }}
-                sx={textFieldStyles}
-              />
-              <TextField
-                label="Password"
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                InputLabelProps={{ style: { color: "white" } }}
-                InputProps={{
-                  style: { color: "white", height: "56px" },
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={togglePasswordVisibility} edge="end" sx={{ color: "white" }}>
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                sx={textFieldStyles}
-              />
-              <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }}>
-                Log In
-              </Button>
-            </Box>
-          </motion.div>
-        </Grid>
-
-        {/* Right: Image */}
-        <Grid item xs={12} md={6} >
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <Box
-              component="img"
-              src={siva1}
-              alt="Temple"
-              sx={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                borderRadius: 2,
-                boxShadow: 3,
-              }}
-            />
-          </motion.div>
-        </Grid>
-      </Grid>
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        style={{ width: "100%", maxWidth: 400 }}
+      >
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            // backgroundColor: "#121212",
+            p: 4,
+            borderRadius: 2,
+            // boxShadow: 5,
+            color: "white",
+          }}
+        >
+          <Typography variant="h4" align="center" gutterBottom>
+            Log In
+          </Typography>
+          <TextField
+            label="ID"
+            name="userId"
+            value={formData.userId}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            InputLabelProps={{ style: { color: "white" } }}
+            InputProps={{ style: { color: "white", height: "56px" } }}
+            sx={textFieldStyles}
+          />
+          <TextField
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            InputLabelProps={{ style: { color: "white" } }}
+            InputProps={{
+              style: { color: "white", height: "56px" },
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={togglePasswordVisibility} edge="end" sx={{ color: "white" }}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            sx={textFieldStyles}
+          />
+          <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }}>
+            Log In
+          </Button>
+        </Box>
+      </motion.div>
     </Box>
   );
 };
