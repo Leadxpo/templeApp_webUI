@@ -187,7 +187,7 @@ const RegisterBanner = () => {
             if (updateResponse.status === 200) {
               localStorage.setItem("userData", JSON.stringify(updatedUser));
               setUser(updatedUser);
-              window.location.reload();
+              window.location.reload();;
             }
           }
         }
@@ -283,7 +283,7 @@ const RegisterBanner = () => {
 
       <Box
       sx={{
-        height: { xs: "300px", sm: "500px", md: "800px", lg: "1000px" },
+        height: { xs: "800px", sm: "800px", md: "800px", lg: "1000px" },
         // backgroundColor:"whitesmoke",
         
         overflow: "hidden",
