@@ -34,6 +34,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import LogoImage from "../../Images/KotilingaTempleLogo1.png";
 import lingam from "../../Images/lingam.png";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const RegisterBanner = () => {
   const [openModal1, setOpenModal1] = useState(false);
@@ -46,6 +47,8 @@ const RegisterBanner = () => {
   const [donationAmount, setDonationAmount] = useState(5000);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+    const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -278,24 +281,62 @@ const RegisterBanner = () => {
         </Box>
       </Box>
 
-      {/* Donate Image */}
-     <Box
-        sx={{
-           height: 1000, 
-          mb: 4,
-          display: "flex",
-          justifyContent: "center",
-          cursor: "pointer",
-        }}
-      >
-         <Canvas camera={{ position: [0, 2, 5], fov: 45 }}>
+      <Box
+      sx={{
+        height: { xs: "300px", sm: "500px", md: "800px", lg: "1000px" },
+        // backgroundColor:"whitesmoke",
+        
+        overflow: "hidden",
+        width: "100%",
+      }}
+    >
+    <Canvas
+  style={{ width: "100%", height: "100%" }}
+  camera={{ position: [0, 1, 3.2], fov: 50 }}
+  shadows // Enable shadow map on Canvas
+>
+  <ambientLight intensity={0.3} />
+  <directionalLight
+    position={[5, 5, 5]}
+    intensity={1.5}
+    castShadow
+    shadow-mapSize-width={1024}
+    shadow-mapSize-height={1024}
+    shadow-camera-near={0.5}
+    shadow-camera-far={20}
+    shadow-camera-left={-5}
+    shadow-camera-right={5}
+    shadow-camera-top={5}
+    shadow-camera-bottom={-5}
+  />
+  
+  <ObjModel
+    path="/models/L1.obj"
+    color="white"
+    scale={isMobile ? [3, 3, 3] : [5, 5, 5]}
+    castShadow // This object will cast shadow
+    receiveShadow // This object will also receive shadows (optional)
+  />
 
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[5, 5, 5]} />
-        <ObjModel />
-         <OrbitControls />
-      </Canvas>
-      </Box>
+  {/* Add a plane to catch the shadow */}
+  <mesh
+    rotation-x={-Math.PI / 2}
+    position={[0, -1, 0]}
+    receiveShadow
+  >
+    <planeGeometry args={[100, 100]} />
+    <shadowMaterial opacity={0.3} />
+  </mesh>
+
+  <OrbitControls
+    minDistance={1}
+    maxDistance={10}
+    enablePan={false}
+    enableZoom={false}
+  />
+</Canvas>
+
+    </Box>
 
       {/* <ModelViewer modelPath="/models/L.obj" /> */}
 
